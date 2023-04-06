@@ -126,14 +126,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fillColor: Colors.white,
                             filled: true,
                           ),
-                          validator: (value) {
+                          /*validator: (value) {
                             if (value!.isEmpty ||
                                 !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
                               return "Enter correct name!";
                             } else {
                               return null;
                             }
-                          },
+                          },*/
                         )),
                     SizedBox(height: 12),
                     //last name textfiled
@@ -152,14 +152,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fillColor: Colors.white,
                             filled: true,
                           ),
-                          validator: (value) {
+                          /*validator: (value) {
                             if (value!.isEmpty ||
                                 !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
                               return "Enter correct name!";
                             } else {
                               return null;
                             }
-                          },
+                          },*/
                         )),
                     SizedBox(height: 12),
 
@@ -274,6 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Processing Data')),
                             );
+                            signUp();
                           }
                         },
                         child: const Text('Submit'),

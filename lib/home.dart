@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/screens/app%20screens/account.dart';
 import 'package:music_app/screens/app%20screens/home.dart';
+import 'package:music_app/screens/app%20screens/notification.dart';
 import 'package:music_app/screens/app%20screens/trending.dart';
 
 class Home extends StatefulWidget {
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _children = const [
     HomeScreen(),
     TrendingScreen(),
+    NotificationScreen(),
     AccountScreen(),
   ];
 
@@ -38,6 +40,10 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.trending_up), label: 'trending'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notification',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'account'),
         ],
       ),

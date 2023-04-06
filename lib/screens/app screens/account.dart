@@ -18,7 +18,7 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Signed in with: ${user.email!}'),
+            Text('Hello ${user.email!}'),
             MaterialButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
