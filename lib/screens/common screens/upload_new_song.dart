@@ -14,9 +14,9 @@ class UploadNewSong extends StatefulWidget {
 
 class _UploadNewSongState extends State<UploadNewSong> {
   //text controller
-  final songname = TextEditingController();
+  final songName = TextEditingController();
   final singer = TextEditingController();
-  final songartist = TextEditingController();
+  final songAuthor = TextEditingController();
   PlatformFile? pickedImageFile, pickedSongFile;
   var songUrlDownload, imageUrlDownload;
 
@@ -70,21 +70,21 @@ class _UploadNewSongState extends State<UploadNewSong> {
   }
 
   submitData(context) {
-    if (songname.text != '' &&
+    if (songName.text != '' &&
         songUrlDownload != null &&
         imageUrlDownload != null) {
-      print(songname.text);
+      print(songName.text);
       print(singer.text);
-      print(songartist.text);
+      print(songAuthor.text);
       print(songUrlDownload.toString());
       print(imageUrlDownload.toString());
 
       var data = {
-        "song_name": songname.text,
+        "songName": songName.text,
         "singer": singer.text,
-        "song_artist": songartist.text,
-        "song_url": songUrlDownload.toString(),
-        "image_url": imageUrlDownload.toString(),
+        "songAuthor": songAuthor.text,
+        "songUrl": songUrlDownload.toString(),
+        "imageUrl": imageUrlDownload.toString(),
       };
 
       FirebaseFirestore.instance
@@ -172,7 +172,7 @@ class _UploadNewSongState extends State<UploadNewSong> {
               height: 15,
             ),
             TextFormField(
-              controller: songname,
+              controller: songName,
               decoration:
                   const InputDecoration(hintText: "Enter the song's name"),
             ),
@@ -188,9 +188,9 @@ class _UploadNewSongState extends State<UploadNewSong> {
               height: 15,
             ),
             TextFormField(
-              controller: songartist,
+              controller: songAuthor,
               decoration:
-                  const InputDecoration(hintText: "Enter the song's artist"),
+                  const InputDecoration(hintText: "Enter the song's Author"),
             ),
             const SizedBox(
               height: 15,
