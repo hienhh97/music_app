@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:music_app/models/playlist.dart';
 
 import '../../models/song.dart';
 import '../../widgets/widgets.dart';
+import 'components/custom_search.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,15 +15,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Stream<List<Song>> readSongs() => FirebaseFirestore.instance
+      .collection('songs')
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => Song.fromJson(doc.data(), doc.id))
+          .toList());
+
+  Stream<List<Playlist>> readPlaylists() => FirebaseFirestore.instance
+      .collection('playlists')
+      .snapshots()
+      .map((snapshot) => snapshot.docs
+          .map((doc) => Playlist.fromJson(doc.data(), doc.id))
+          .toList());
+
   @override
   Widget build(BuildContext context) {
-    Stream<List<Song>> readSongs() => FirebaseFirestore.instance
-        .collection('songs')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());
-
-    //List<Song> songs = Song.songs;
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -42,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {},
             icon: const Icon(Icons.workspaces_filled),
           ),
-          title: Center(child: Text('Home screen')),
+          title: const Center(child: Text('Home screen')),
           actions: [
             IconButton(
                 onPressed: () {
@@ -54,107 +64,78 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.search))
           ],
         ),
-        body: StreamBuilder<List<Song>>(
-          stream: readSongs(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Something went wrong!');
-            } else if (snapshot.hasData) {
-              final songs = snapshot.data!;
-
-              return SingleChildScrollView(
-                child: Column(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+            child: Column(
+              children: [
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(20),
-                          child: SectionHeader(title: 'Playlist'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.27,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: songs.length,
-                            itemBuilder: (context, index) {
-                              return SongCard(song: songs[index]);
-                            },
-                          ),
-                        ),
-                      ],
+                    const Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: SectionHeader(title: 'Playlist'),
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.27,
+                        child: StreamBuilder<List<Song>>(
+                          stream: readSongs(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text('something went wrong!');
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Text('loading!');
+                            }
+
+                            final songs = snapshot.data!;
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: songs.length,
+                              itemBuilder: (context, index) {
+                                return SongCard(song: songs[index]);
+                              },
+                            );
+                          },
+                        )),
                   ],
                 ),
-              );
-            } else
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-          },
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Column(
+                    children: [
+                      const SectionHeader(title: 'Playlist'),
+                      StreamBuilder<List<Playlist>>(
+                        stream: readPlaylists(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text('something went wrong!');
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text('loading!');
+                          }
+                          final playlists = snapshot.data!;
+                          return ListView.builder(
+                            padding: const EdgeInsets.only(top: 20),
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: playlists.length,
+                            itemBuilder: (context, index) {
+                              return PlaylistCart(playlist: playlists[index]);
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
-  }
-}
-
-class CustomSearch extends SearchDelegate {
-  List<String> allData = [
-    'Em của ngày hôm qua',
-    'Lạc',
-    'Chiều thu họa bóng nàng',
-    'Đường tôi chở em về',
-    'Là anh'
-  ];
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-      )
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    // TODO: back button
-    return IconButton(
-        onPressed: () {
-          close(context, null);
-        },
-        icon: const Icon(Icons.arrow_back_ios));
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    List<String> matchQuery = [];
-    for (var item in allData) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(item);
-      }
-    }
-
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = matchQuery[index];
-          return ListTile(
-            title: Text(result),
-          );
-        });
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    throw UnimplementedError();
   }
 }
