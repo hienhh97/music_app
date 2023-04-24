@@ -1,60 +1,92 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:music_app/models/song.dart';
 
-class CustomSearch extends SearchDelegate {
-  List<String> allData = [
-    'Em của ngày hôm qua',
-    'Lạc',
-    'Chiều thu họa bóng nàng',
-    'Đường tôi chở em về',
-    'Là anh'
-  ];
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
 
   @override
-  List<Widget>? buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  String name = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Card(
+          child: TextField(
+            decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.search), hintText: 'Search music...'),
+            onChanged: (val) {
+              setState(
+                () {
+                  name = val;
+                },
+              );
+            },
+          ),
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('songs').snapshots(),
+        builder: (context, snapshot) {
+          return (snapshot.connectionState == ConnectionState.waiting)
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var data = snapshot.data!.docs[index].data()
+                        as Map<String, dynamic>;
+
+                    if (name.isEmpty ||
+                        data['songName']
+                            .toString()
+                            .toLowerCase()
+                            .startsWith(name.toLowerCase())) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            '/song',
+                            arguments: data[index],
+                          );
+                        },
+                        child: ListTile(
+                          title: Text(
+                            data['songName'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Text(
+                            data['singer'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14,
+                            ),
+                          ),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(data['imageUrl']),
+                          ),
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
+                );
         },
-        icon: const Icon(Icons.clear),
-      )
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    // TODO: back button
-    return IconButton(
-        onPressed: () {
-          close(context, null);
-        },
-        icon: const Icon(Icons.arrow_back_ios));
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-    List<String> matchQuery = [];
-    for (var item in allData) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(item);
-      }
-    }
-
-    return ListView.builder(
-        itemCount: matchQuery.length,
-        itemBuilder: (context, index) {
-          var result = matchQuery[index];
-          return ListTile(
-            title: Text(result),
-          );
-        });
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    throw UnimplementedError();
+      ),
+    );
   }
 }

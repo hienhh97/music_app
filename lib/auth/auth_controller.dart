@@ -25,7 +25,7 @@ class MainScreen extends StatelessWidget {
               ],
             );
           } else {
-            return AuthScreen();
+            return const AuthScreen();
           }
         },
       ),

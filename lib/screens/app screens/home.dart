@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:music_app/models/playlist.dart';
 
 import '../../models/song.dart';
@@ -56,10 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: CustomSearch(),
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()));
                 },
                 icon: const Icon(Icons.search))
           ],
@@ -79,27 +78,28 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 20,
                     ),
                     SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.27,
-                        child: StreamBuilder<List<Song>>(
-                          stream: readSongs(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return const Text('something went wrong!');
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Text('loading!');
-                            }
+                      height: MediaQuery.of(context).size.height * 0.27,
+                      child: StreamBuilder<List<Song>>(
+                        stream: readSongs(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text('something went wrong!');
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text('loading!');
+                          }
 
-                            final songs = snapshot.data!;
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: songs.length,
-                              itemBuilder: (context, index) {
-                                return SongCard(song: songs[index]);
-                              },
-                            );
-                          },
-                        )),
+                          final songs = snapshot.data!;
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: songs.length,
+                            itemBuilder: (context, index) {
+                              return SongCard(song: songs[index]);
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 Padding(

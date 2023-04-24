@@ -46,15 +46,18 @@ class PlaylistCart extends StatelessWidget {
                 children: [
                   Text(
                     playlist.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                   ),
                   Text(
                     '${playlist.songIDs.length} songs',
                     maxLines: 2,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontSize: 14),
                   )
                 ],
               ),

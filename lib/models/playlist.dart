@@ -1,5 +1,3 @@
-import 'song.dart';
-
 class Playlist {
   final String id;
   final String title;
