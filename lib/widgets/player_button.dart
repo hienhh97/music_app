@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
-class PlayerButton extends StatelessWidget {
+class PlayerButton extends StatefulWidget {
   const PlayerButton({
     super.key,
     required this.audioPlayer,
@@ -10,16 +10,58 @@ class PlayerButton extends StatelessWidget {
   final AudioPlayer audioPlayer;
 
   @override
+  State<PlayerButton> createState() => _PlayerButtonState();
+}
+
+class _PlayerButtonState extends State<PlayerButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation<double> animation;
+  bool isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        StreamBuilder<bool>(
+          stream: widget.audioPlayer.shuffleModeEnabledStream,
+          builder: (context, snapshot) {
+            final shuffleModeEnabled = snapshot.data ?? false;
+
+            return IconButton(
+                onPressed: () {
+                  widget.audioPlayer.setShuffleModeEnabled(
+                      !widget.audioPlayer.shuffleModeEnabled);
+                },
+                icon: shuffleModeEnabled
+                    ? const Icon(
+                        Icons.shuffle_outlined,
+                        color: Colors.orange,
+                      )
+                    : const Icon(
+                        Icons.shuffle_outlined,
+                        color: Colors.white,
+                      ));
+          },
+        ),
+        const SizedBox(
+          width: 20,
+        ),
         StreamBuilder<SequenceState?>(
-          stream: audioPlayer.sequenceStateStream,
+          stream: widget.audioPlayer.sequenceStateStream,
           builder: (context, snapshot) {
             return IconButton(
-              onPressed:
-                  audioPlayer.hasPrevious ? audioPlayer.seekToPrevious : null,
+              onPressed: widget.audioPlayer.hasPrevious
+                  ? widget.audioPlayer.seekToPrevious
+                  : null,
               iconSize: 45.0,
               icon: const Icon(
                 Icons.skip_previous,
@@ -29,11 +71,12 @@ class PlayerButton extends StatelessWidget {
           },
         ),
         StreamBuilder<PlayerState>(
-          stream: audioPlayer.playerStateStream,
+          stream: widget.audioPlayer.playerStateStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final playerState = snapshot.data;
-              final processingState = playerState!.processingState;
+              final processingState = playerState?.processingState;
+
               if (processingState == ProcessingState.loading ||
                   processingState == ProcessingState.buffering) {
                 return Container(
@@ -42,9 +85,9 @@ class PlayerButton extends StatelessWidget {
                   margin: const EdgeInsets.all(10.0),
                   child: const CircularProgressIndicator(),
                 );
-              } else if (!audioPlayer.playing) {
+              } else if (!widget.audioPlayer.playing) {
                 return IconButton(
-                  onPressed: audioPlayer.play,
+                  onPressed: widget.audioPlayer.play,
                   iconSize: 75,
                   icon: const Icon(
                     Icons.play_circle,
@@ -53,7 +96,7 @@ class PlayerButton extends StatelessWidget {
                 );
               } else if (processingState != ProcessingState.completed) {
                 return IconButton(
-                  onPressed: audioPlayer.pause,
+                  onPressed: widget.audioPlayer.pause,
                   iconSize: 75,
                   icon: const Icon(
                     Icons.pause_circle,
@@ -62,8 +105,8 @@ class PlayerButton extends StatelessWidget {
                 );
               } else {
                 return IconButton(
-                  onPressed: () => audioPlayer.seek(Duration.zero,
-                      index: audioPlayer.effectiveIndices!.first),
+                  onPressed: () => widget.audioPlayer.seek(Duration.zero,
+                      index: widget.audioPlayer.effectiveIndices!.first),
                   iconSize: 75,
                   icon: const Icon(
                     Icons.replay_circle_filled_outlined,
@@ -77,15 +120,44 @@ class PlayerButton extends StatelessWidget {
           },
         ),
         StreamBuilder<SequenceState?>(
-          stream: audioPlayer.sequenceStateStream,
+          stream: widget.audioPlayer.sequenceStateStream,
           builder: (context, snapshot) {
             return IconButton(
-              onPressed: audioPlayer.hasNext ? audioPlayer.seekToNext : null,
+              onPressed: widget.audioPlayer.hasNext
+                  ? widget.audioPlayer.seekToNext
+                  : null,
               iconSize: 45.0,
               icon: const Icon(
                 Icons.skip_next,
                 color: Colors.white,
               ),
+            );
+          },
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        StreamBuilder<LoopMode>(
+          stream: widget.audioPlayer.loopModeStream,
+          builder: (context, snapshot) {
+            final loopMode = snapshot.data ?? LoopMode.off;
+            const icons = [
+              Icon(Icons.repeat, color: Colors.grey),
+              Icon(Icons.repeat, color: Colors.orange),
+              Icon(Icons.repeat_one, color: Colors.orange),
+            ];
+            const cycleModes = [
+              LoopMode.off,
+              LoopMode.all,
+              LoopMode.one,
+            ];
+            final index = cycleModes.indexOf(loopMode);
+            return IconButton(
+              icon: icons[index],
+              onPressed: () {
+                widget.audioPlayer.setLoopMode(cycleModes[
+                    (cycleModes.indexOf(loopMode) + 1) % cycleModes.length]);
+              },
             );
           },
         ),

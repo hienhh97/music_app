@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:music_app/providers/player_provider.dart';
 import 'package:music_app/screens/app%20screens/account.dart';
 import 'package:music_app/screens/app%20screens/home.dart';
 import 'package:music_app/screens/app%20screens/notification.dart';
 import 'package:music_app/screens/app%20screens/trending.dart';
+import 'package:music_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -30,22 +34,55 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    PlayerProvider songProvider = Provider.of<PlayerProvider>(context);
+
     return Scaffold(
       body: _children[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _navigateBottomNavbar,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.trending_up), label: 'trending'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notification',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'account'),
-        ],
+      bottomNavigationBar: SizedBox(
+        height: songProvider.currentSong != null ? 150 : 80,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                //current song
+                songProvider.currentSong != null
+                    ? const CurrentSong() // display on
+                    : Container(),
+
+                //Bottom Navbar
+                Container(
+                  color: Colors.blueGrey.shade900,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 12),
+                    child: GNav(
+                      selectedIndex: _selectedIndex,
+                      onTabChange: _navigateBottomNavbar,
+                      color: Colors.white,
+                      rippleColor: Colors.blueGrey[400]!,
+                      hoverColor: Colors.blueGrey[100]!,
+                      tabBackgroundColor: Colors.grey.shade700,
+                      activeColor: Colors.white,
+                      gap: 7,
+                      tabBorderRadius: 20,
+                      padding: const EdgeInsets.all(16),
+                      iconSize: 24,
+                      tabs: const [
+                        GButton(icon: Icons.home, text: 'Home'),
+                        GButton(icon: Icons.trending_up, text: 'Trending'),
+                        GButton(
+                          icon: Icons.notifications,
+                          text: 'Notification',
+                        ),
+                        GButton(icon: Icons.person, text: 'Personal'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

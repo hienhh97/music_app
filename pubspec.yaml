@@ -45,6 +45,11 @@ dependencies:
   get: ^4.6.5
   just_audio: ^0.9.32
   rxdart: ^0.27.7
+  just_audio_background: ^0.0.1-beta.9
+  google_nav_bar: ^5.0.6
+  firestore_search_input: ^0.2.0
+  provider: ^6.0.5
+  audioplayers: ^0.20.1
 
 dev_dependencies:
   flutter_test:

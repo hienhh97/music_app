@@ -7,12 +7,12 @@ class Song {
   final String songUrl;
 
   Song({
-    required this.id,
-    required this.songName,
-    required this.singer,
-    required this.songAuthor,
-    required this.imageUrl,
-    required this.songUrl,
+    this.songName = '',
+    this.singer = '',
+    this.songAuthor = '',
+    this.imageUrl = '',
+    this.id = '',
+    this.songUrl = '',
   });
 
   Map<String, dynamic> toJson() => {
@@ -23,50 +23,12 @@ class Song {
         songUrl: 'songUrl',
       };
 
-  static Song fromJson(Map<String, dynamic> json, String id) => Song(
-        id: id,
-        songName: json['songName'],
-        singer: json['singer'],
-        songAuthor: json['songAuthor'],
-        imageUrl: json['imageUrl'],
-        songUrl: json['songUrl'],
+  static Song fromJson(Map<String, dynamic> json) => Song(
+        id: json['id'] as String? ?? '',
+        songName: json['songName'] as String? ?? '',
+        singer: json['singer'] as String? ?? '',
+        songAuthor: json['songAuthor'] as String? ?? '',
+        imageUrl: json['imageUrl'] as String? ?? '',
+        songUrl: json['songUrl'] as String? ?? '',
       );
 }
-
-
-// class Song {
-//   final String songName;
-//   final String singer;
-//   final String songAuthor;
-//   final String imageUrl;
-//   final String songUrl;
-
-//   Song({
-//     required this.songName,
-//     required this.singer,
-//     required this.songAuthor,
-//     required this.imageUrl,
-//     required this.songUrl,
-//   });
-
-//   static List<Song> songs = [
-//     Song(
-//         songName: 'lac',
-//         singer: 'Rhymastic',
-//         songAuthor: 'Rhymastic',
-//         imageUrl: 'assets/images/Lac.jpg',
-//         songUrl: 'assets/music/Lac.mp3'),
-//     Song(
-//         songName: 'lac',
-//         singer: 'Rhymastic',
-//         songAuthor: 'Rhymastic',
-//         imageUrl: 'assets/images/Lac.jpg',
-//         songUrl: 'assets/music/Lac.mp3'),
-//     Song(
-//         songName: 'lac',
-//         singer: 'Rhymastic',
-//         songAuthor: 'Rhymastic',
-//         imageUrl: 'assets/images/Lac.jpg',
-//         songUrl: 'assets/music/Lac.mp3'),
-//   ];
-// }

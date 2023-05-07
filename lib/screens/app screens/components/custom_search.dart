@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:music_app/models/song.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -51,10 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             .startsWith(name.toLowerCase())) {
                       return InkWell(
                         onTap: () {
-                          Get.toNamed(
-                            '/song',
-                            arguments: data[index],
-                          );
+                          Get.toNamed('/home');
                         },
                         child: ListTile(
                           title: Text(

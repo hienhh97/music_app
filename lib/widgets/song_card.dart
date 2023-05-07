@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_app/providers/player_provider.dart';
+import 'package:provider/provider.dart';
 import '../models/song.dart';
 
 class SongCard extends StatelessWidget {
@@ -12,8 +14,11 @@ class SongCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PlayerProvider songProvider = Provider.of<PlayerProvider>(context);
+
     return InkWell(
       onTap: () {
+        songProvider.currentSong = song;
         Get.toNamed('/song', arguments: song);
       },
       child: Container(

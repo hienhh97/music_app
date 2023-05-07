@@ -6,27 +6,22 @@ import '../../models/song.dart';
 import '../../widgets/widgets.dart';
 import 'components/custom_search.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   Stream<List<Song>> readSongs() => FirebaseFirestore.instance
       .collection('songs')
       .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((doc) => Song.fromJson(doc.data(), doc.id))
-          .toList());
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());
 
-  Stream<List<Playlist>> readPlaylists() => FirebaseFirestore.instance
-      .collection('playlists')
-      .snapshots()
-      .map((snapshot) => snapshot.docs
-          .map((doc) => Playlist.fromJson(doc.data(), doc.id))
-          .toList());
+  Future<List<Playlist>> getPlaylists() async {
+    var ref = FirebaseFirestore.instance.collection('playlists');
+    var snapshot = await ref.get();
+    var data = snapshot.docs.map((i) => i.data());
+    var playlists = data.map((e) => Playlist.fromJson(e));
+    return playlists.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color.fromARGB(255, 5, 65, 73),
-            Colors.deepPurpleAccent,
+            Colors.black87,
+            Colors.black54,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -72,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(right: 20),
-                      child: SectionHeader(title: 'Playlist'),
+                      child: SectionHeader(title: 'Trending Music'),
                     ),
                     const SizedBox(
                       height: 20,
@@ -107,25 +102,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       const SectionHeader(title: 'Playlist'),
-                      StreamBuilder<List<Playlist>>(
-                        stream: readPlaylists(),
+                      FutureBuilder<List<Playlist>>(
+                        future: getPlaylists(),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
-                            return const Text('something went wrong!');
+                            return Text(snapshot.error.toString());
                           } else if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Text('loading!');
+                          } else if (snapshot.hasData) {
+                            var playlists = snapshot.data!;
+                            return ListView.builder(
+                              padding: const EdgeInsets.only(top: 20),
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: playlists.length,
+                              itemBuilder: (context, index) {
+                                return PlaylistCart(playlist: playlists[index]);
+                              },
+                            );
+                          } else {
+                            return const Text(
+                                'No topics found in Firestore. Check database');
                           }
-                          final playlists = snapshot.data!;
-                          return ListView.builder(
-                            padding: const EdgeInsets.only(top: 20),
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: playlists.length,
-                            itemBuilder: (context, index) {
-                              return PlaylistCart(playlist: playlists[index]);
-                            },
-                          );
                         },
                       ),
                     ],

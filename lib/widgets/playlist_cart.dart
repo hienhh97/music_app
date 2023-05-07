@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_app/providers/playlists_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../models/playlist.dart';
 
@@ -13,8 +15,12 @@ class PlaylistCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PlaylistsProvider playlistsProvider =
+        Provider.of<PlaylistsProvider>(context);
+
     return InkWell(
       onTap: () {
+        playlistsProvider.currentPlaylist = playlist;
         Get.toNamed('/playlist', arguments: playlist);
       },
       child: Container(

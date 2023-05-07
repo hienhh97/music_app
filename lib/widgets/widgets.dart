@@ -3,3 +3,4 @@ export 'song_card.dart';
 export 'playlist_cart.dart';
 export 'seekbar.dart';
 export 'player_button.dart';
+export 'current_song.dart';
