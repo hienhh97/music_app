@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_app/screens/common%20screens/song_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -50,7 +51,11 @@ class _SearchScreenState extends State<SearchScreen> {
                             .startsWith(name.toLowerCase())) {
                       return InkWell(
                         onTap: () {
-                          Get.toNamed('/home');
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => const SongScreen(),
+                          //     ));
                         },
                         child: ListTile(
                           title: Text(
