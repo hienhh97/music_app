@@ -41,40 +41,15 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.workspaces_filled),
-          ),
-          title: const Center(child: Text('Music application')),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SearchScreen()));
-                },
-                icon: const Icon(Icons.search))
-          ],
-        ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: SectionHeader(title: 'Trending Music'),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.27,
+                      height: MediaQuery.of(context).size.height * 0.5,
                       child: StreamBuilder<List<Song>>(
                         stream: readSongs(),
                         builder: (context, snapshot) {
@@ -86,25 +61,68 @@ class HomeScreen extends StatelessWidget {
                           }
 
                           final songs = snapshot.data!;
-                          return CarouselSlider(
-                              items: songs.map((index) {
-                                return SongCard(song: index);
-                              }).toList(),
-                              options: CarouselOptions(
-                                aspectRatio: 2,
-                                onPageChanged: (index, reason) {},
-                                enlargeCenterPage: true,
-                                enlargeFactor: .2,
-                                height: 300,
-                                autoPlay: true,
-                              ));
+                          return Column(
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.workspaces_filled),
+                                    color: Colors.white,
+                                  ),
+                                  //search Icon
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SearchScreen(songs: songs)));
+                                    },
+                                    icon: const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
+                                    splashColor: Colors.grey[400],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 20),
+                                child: SectionHeader(title: 'Trending Music'),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              CarouselSlider(
+                                  items: songs.map((index) {
+                                    return SongCard(song: index);
+                                  }).toList(),
+                                  options: CarouselOptions(
+                                    aspectRatio: 2,
+                                    onPageChanged: (index, reason) {},
+                                    enlargeCenterPage: true,
+                                    enlargeFactor: .2,
+                                    height: 260,
+                                    autoPlay: true,
+                                  )),
+                            ],
+                          );
                         },
                       ),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30, right: 20),
+                  padding: const EdgeInsets.only(top: 30),
                   child: Column(
                     children: [
                       const SectionHeader(title: 'Playlist'),
