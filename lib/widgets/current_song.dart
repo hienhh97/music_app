@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/providers/fav_provider.dart';
-import 'package:music_app/providers/player_provider.dart';
+import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 
 class CurrentSong extends StatelessWidget {
@@ -10,7 +10,7 @@ class CurrentSong extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlayerProvider songProvider = Provider.of<PlayerProvider>(context);
+    SongProvider songProvider = Provider.of<SongProvider>(context);
     FavProvider favProvider = Provider.of<FavProvider>(context);
 
     return Container(

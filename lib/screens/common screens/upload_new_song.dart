@@ -112,6 +112,7 @@ class _UploadNewSongState extends State<UploadNewSong> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Upload new song'),
       ),

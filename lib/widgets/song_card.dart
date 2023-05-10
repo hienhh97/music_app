@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:music_app/providers/player_provider.dart';
+import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
 
@@ -14,7 +14,7 @@ class SongCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PlayerProvider songProvider = Provider.of<PlayerProvider>(context);
+    SongProvider songProvider = Provider.of<SongProvider>(context);
 
     return InkWell(
       onTap: () {
@@ -27,7 +27,7 @@ class SongCard extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           children: [
             Container(
-              width: MediaQuery.of(context).size.width * 0.45,
+              width: MediaQuery.of(context).size.width * .8,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 image: DecorationImage(
@@ -40,7 +40,7 @@ class SongCard extends StatelessWidget {
             ),
             Container(
               height: 50,
-              width: MediaQuery.of(context).size.width * 0.37,
+              width: MediaQuery.of(context).size.width * 0.6,
               margin: const EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -56,16 +56,17 @@ class SongCard extends StatelessWidget {
                       Text(
                         song.songName,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.deepPurple,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 22),
                       ),
                       Text(
                         song.singer,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            color: Colors.deepPurple,
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),

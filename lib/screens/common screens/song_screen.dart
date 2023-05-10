@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:music_app/models/song.dart';
 import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/playlists_provider.dart';
-import 'package:music_app/providers/player_provider.dart';
+import 'package:music_app/providers/song_provider.dart';
+import 'package:music_app/screens/common%20screens/playlist_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:music_app/const.dart';
 
@@ -15,8 +14,6 @@ class SongScreen extends StatefulWidget {
 }
 
 class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
-  Song song = Get.arguments;
-
   late AnimationController controller;
   late Animation<double> animation;
 
@@ -38,7 +35,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    PlayerProvider songProvider = Provider.of<PlayerProvider>(context);
+    SongProvider songProvider = Provider.of<SongProvider>(context);
     PlaylistsProvider playlistsProvider =
         Provider.of<PlaylistsProvider>(context);
     FavProvider favProvider = Provider.of<FavProvider>(context);
@@ -88,7 +85,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
         fit: StackFit.expand,
         children: [
           Image.network(
-            song.imageUrl,
+            songProvider.currentSong!.imageUrl,
             fit: BoxFit.cover,
           ),
           const _BackgroundFilter(),
@@ -102,7 +99,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  song.songName,
+                  songProvider.currentSong!.songName,
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -113,7 +110,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                   height: 5,
                 ),
                 Text(
-                  song.singer,
+                  songProvider.currentSong!.singer,
                   maxLines: 2,
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: Colors.white,
@@ -129,7 +126,8 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                   alignment: Alignment.center,
                   child: CircleAvatar(
                     backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(song.imageUrl),
+                    backgroundImage:
+                        NetworkImage(songProvider.currentSong!.imageUrl),
                     radius: screenWidth / 3,
                   ),
                 ),
@@ -227,52 +225,62 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                 playlistsProvider.currentPlaylist != null
                     ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    playlistsProvider.currentPlaylist!.imageUrl,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PlaylistScreen()));
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      playlistsProvider
+                                          .currentPlaylist!.imageUrl,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'From playlist:',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  Text(
-                                    playlistsProvider.currentPlaylist!.title,
-                                    style: const TextStyle(
-                                        color: Colors.yellowAccent,
-                                        fontSize: 14,
-                                        fontStyle: FontStyle.italic,
-                                        decoration: TextDecoration.underline),
-                                  ),
-                                ],
+                              const SizedBox(
+                                width: 10,
                               ),
-                            ),
-                            IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.arrow_right_rounded,
-                                  color: Colors.white,
-                                ))
-                          ],
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'From playlist:',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    Text(
+                                      playlistsProvider.currentPlaylist!.title,
+                                      style: const TextStyle(
+                                          color: Colors.yellowAccent,
+                                          fontSize: 14,
+                                          fontStyle: FontStyle.italic,
+                                          decoration: TextDecoration.underline),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.arrow_right_rounded,
+                                    color: Colors.white,
+                                  ))
+                            ],
+                          ),
                         ),
                       )
                     : Container(),

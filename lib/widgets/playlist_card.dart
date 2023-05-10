@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 import '../models/playlist.dart';
 
-class PlaylistCart extends StatelessWidget {
-  const PlaylistCart({
+class PlaylistCard extends StatelessWidget {
+  const PlaylistCard({
     super.key,
     required this.playlist,
   });

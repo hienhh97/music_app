@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/models/playlist.dart';
@@ -46,7 +47,7 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {},
             icon: const Icon(Icons.workspaces_filled),
           ),
-          title: const Center(child: Text('Home screen')),
+          title: const Center(child: Text('Music application')),
           actions: [
             IconButton(
                 onPressed: () {
@@ -85,20 +86,25 @@ class HomeScreen extends StatelessWidget {
                           }
 
                           final songs = snapshot.data!;
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: songs.length,
-                            itemBuilder: (context, index) {
-                              return SongCard(song: songs[index]);
-                            },
-                          );
+                          return CarouselSlider(
+                              items: songs.map((index) {
+                                return SongCard(song: index);
+                              }).toList(),
+                              options: CarouselOptions(
+                                aspectRatio: 2,
+                                onPageChanged: (index, reason) {},
+                                enlargeCenterPage: true,
+                                enlargeFactor: .2,
+                                height: 300,
+                                autoPlay: true,
+                              ));
                         },
                       ),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(top: 30, right: 20),
                   child: Column(
                     children: [
                       const SectionHeader(title: 'Playlist'),
@@ -118,7 +124,7 @@ class HomeScreen extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount: playlists.length,
                               itemBuilder: (context, index) {
-                                return PlaylistCart(playlist: playlists[index]);
+                                return PlaylistCard(playlist: playlists[index]);
                               },
                             );
                           } else {

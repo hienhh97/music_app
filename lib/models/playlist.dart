@@ -32,16 +32,4 @@ class Playlist {
         //         .toList() ??
         //     const [],
       );
-  Future<List<Song>> getListSong() async {
-    List<Song> result = [];
-    for (var songID in songIDs) {
-      result.add(SongProvider.instance.getByID(songID));
-    }
-    return result;
-  }
-
-  Song getMusicAtIndex(int index) {
-    final musicId = songIDs[index];
-    return SongProvider.instance.getByID(musicId);
-  }
 }

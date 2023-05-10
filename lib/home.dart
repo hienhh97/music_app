@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:music_app/providers/player_provider.dart';
+import 'package:music_app/providers/song_provider.dart';
 import 'package:music_app/screens/app%20screens/account.dart';
 import 'package:music_app/screens/app%20screens/home.dart';
 import 'package:music_app/screens/app%20screens/notification.dart';
 import 'package:music_app/screens/app%20screens/trending.dart';
+import 'package:music_app/screens/common%20screens/song_screen.dart';
 import 'package:music_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +35,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    PlayerProvider songProvider = Provider.of<PlayerProvider>(context);
+    SongProvider songProvider = Provider.of<SongProvider>(context);
 
     return Scaffold(
       body: _children[_selectedIndex],
@@ -46,7 +47,15 @@ class _HomeState extends State<Home> {
               children: [
                 //current song
                 songProvider.currentSong != null
-                    ? const CurrentSong() // display on
+                    ? GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SongScreen(),
+                              ));
+                        },
+                        child: const CurrentSong()) // display on
                     : Container(),
 
                 //Bottom Navbar

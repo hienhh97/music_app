@@ -50,6 +50,7 @@ dependencies:
   firestore_search_input: ^0.2.0
   provider: ^6.0.5
   audioplayers: ^0.20.1
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
