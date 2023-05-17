@@ -15,7 +15,6 @@ class FavProvider with ChangeNotifier {
     } else {
       _favorite.removeWhere((element) => element.id == song.id);
     }
-    notifyListeners();
   }
 
   isFavorite(Song song) {

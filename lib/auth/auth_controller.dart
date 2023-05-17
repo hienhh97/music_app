@@ -6,8 +6,8 @@ import 'package:music_app/screens/common%20screens/song_screen.dart';
 import '../home.dart';
 import 'auth_scr.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+class AuthController extends StatelessWidget {
+  const AuthController({super.key});
 
   @override
   Widget build(BuildContext context) {

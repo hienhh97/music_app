@@ -79,235 +79,255 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.grey[300],
-        body: SafeArea(
-          child: Form(
-            key: formKey,
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/login-screen-icon.png',
-                      width: 100,
-                      height: 100,
-                    ),
-                    SizedBox(height: 20),
-                    //Login title
-                    const Text(
-                      "Register",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-                    ),
-
-                    SizedBox(height: 15),
-
-                    //welcome
-                    Text(
-                      "Join with us!",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    SizedBox(height: 28),
-
-                    //first name textfiled
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          controller: _firstNameController,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(12)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.purple),
-                                borderRadius: BorderRadius.circular(12)),
-                            hintText: "First name",
-                            fillColor: Colors.white,
-                            filled: true,
-                          ),
-                          /*validator: (value) {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-                              return "Enter correct name!";
-                            } else {
-                              return null;
-                            }
-                          },*/
-                        )),
-                    SizedBox(height: 12),
-                    //last name textfiled
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          controller: _lastNameController,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(12)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.purple),
-                                borderRadius: BorderRadius.circular(12)),
-                            hintText: "Last name",
-                            fillColor: Colors.white,
-                            filled: true,
-                          ),
-                          /*validator: (value) {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-                              return "Enter correct name!";
-                            } else {
-                              return null;
-                            }
-                          },*/
-                        )),
-                    SizedBox(height: 12),
-
-                    //age textfiled
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          controller: _ageController,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(12)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.purple),
-                                borderRadius: BorderRadius.circular(12)),
-                            hintText: "Enter your age",
-                            fillColor: Colors.white,
-                            filled: true,
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty ||
-                                !RegExp(r'^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]+$')
-                                    .hasMatch(value)) {
-                              return "Enter correct age number!";
-                            } else {
-                              return null;
-                            }
-                          },
-                        )),
-                    SizedBox(height: 12),
-
-                    //email textfiled
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(12)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.purple),
-                                borderRadius: BorderRadius.circular(12)),
-                            hintText: "Email",
-                            fillColor: Colors.white,
-                            filled: true,
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty ||
-                                !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(value)) {
-                              return "Enter correct e-mail address!";
-                            } else {
-                              return null;
-                            }
-                          },
-                        )),
-                    SizedBox(height: 12),
-
-                    //password TextFormField
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(12)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.purple),
-                              borderRadius: BorderRadius.circular(12)),
-                          hintText: "Password",
-                          fillColor: Colors.white,
-                          filled: true,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 12,
-                    ),
-
-                    //confirm password TextFormField
-                    Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: TextFormField(
-                            controller: _confirmPasswordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(12)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.purple),
-                                  borderRadius: BorderRadius.circular(12)),
-                              hintText: "Confirm Password",
-                              fillColor: Colors.white,
-                              filled: true,
-                            ))),
-
-                    SizedBox(height: 20),
-
-                    //Sign button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
-                            signUp();
-                          }
-                        },
-                        child: const Text('Submit'),
-                      ),
-                    ),
-                    SizedBox(height: 25),
-                    //navigate to login screen
-                    Padding(
-                      padding: EdgeInsets.only(left: 25),
-                      child: Row(
-                        children: [
-                          Text(
-                            "I'm a member! ",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          GestureDetector(
-                            onTap: widget.showLoginScreen,
-                            child: Text(
-                              "Go to Login!",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 18,
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+        backgroundColor: Color(0xFF1F1A30),
+        body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: const [0.1, 0.4, 0.7, 0.9],
+                colors: [
+                  Color.fromARGB(0, 170, 95, 9).withOpacity(0.8),
+                  Color.fromARGB(0, 26, 119, 156),
+                  Color.fromARGB(0, 44, 2, 48),
+                  Color.fromARGB(0, 111, 18, 119),
+                ],
               ),
             ),
-          ),
-        ));
+            child: Form(
+              key: formKey,
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 50),
+                      Image.asset(
+                        'assets/login-screen-icon.png',
+                        width: 100,
+                        height: 100,
+                      ),
+                      SizedBox(height: 20),
+                      Card(
+                        elevation: 5,
+                        color: const Color.fromARGB(255, 171, 211, 250)
+                            .withOpacity(0.4),
+                        child: Container(
+                          width: 400,
+                          padding: const EdgeInsets.all(40.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              //Login title
+                              const Text(
+                                "Register",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 32,
+                                    color: Colors.white),
+                              ),
+
+                              SizedBox(height: 25),
+
+                              //first name textfiled
+                              TextFormField(
+                                controller: _firstNameController,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.purple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  prefixIcon: Icon(Icons.abc),
+                                  hintText: "First name",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                              ),
+                              SizedBox(height: 12),
+                              //last name textfiled
+                              TextFormField(
+                                controller: _lastNameController,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.purple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  prefixIcon: Icon(Icons.abc),
+                                  hintText: "Last name",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                              ),
+                              SizedBox(height: 12),
+
+                              //age textfiled
+                              TextFormField(
+                                controller: _ageController,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.purple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  prefixIcon: Icon(Icons.numbers_outlined),
+                                  hintText: "Enter your age",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty ||
+                                      !RegExp(r'^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]+$')
+                                          .hasMatch(value)) {
+                                    return "Enter correct age number!";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 12),
+
+                              //email textfiled
+                              TextFormField(
+                                controller: _emailController,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.purple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  prefixIcon: Icon(Icons.email_outlined),
+                                  hintText: "Email",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty ||
+                                      !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                          .hasMatch(value)) {
+                                    return "Enter correct e-mail address!";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 12),
+
+                              //password TextFormField
+                              TextFormField(
+                                controller: _passwordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.purple),
+                                      borderRadius: BorderRadius.circular(12)),
+                                  prefixIcon: Icon(Icons.lock_open_outlined),
+                                  hintText: "Password",
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                              ),
+
+                              SizedBox(
+                                height: 12,
+                              ),
+
+                              //confirm password TextFormField
+                              TextFormField(
+                                  controller: _confirmPasswordController,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.purple),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    prefixIcon: Icon(Icons.lock_open_outlined),
+                                    hintText: "Confirm Password",
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                  )),
+
+                              SizedBox(height: 20),
+
+                              //Sign button
+                              GestureDetector(
+                                onTap: signUp,
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                      child: Text('Sign up',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold))),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "I'm a member! ",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: widget.showLoginScreen,
+                              child: Text(
+                                "Go to Login!",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 18,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 45,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )));
   }
 }

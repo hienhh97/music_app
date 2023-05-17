@@ -1,13 +1,19 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 
-class CurrentSong extends StatelessWidget {
+class CurrentSong extends StatefulWidget {
   const CurrentSong({
     super.key,
   });
 
+  @override
+  State<CurrentSong> createState() => _CurrentSongState();
+}
+
+class _CurrentSongState extends State<CurrentSong> {
   @override
   Widget build(BuildContext context) {
     SongProvider songProvider = Provider.of<SongProvider>(context);
@@ -66,18 +72,22 @@ class CurrentSong extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              songProvider.isPlaying
-                  ? songProvider.audioPlayer.pause()
-                  : songProvider.audioPlayer.resume();
+              setState(() {
+                songProvider.onChangePlayerState();
+              });
             },
-            icon: songProvider.isPlaying
+            icon: songProvider.state == PlayerState.PLAYING
                 ? const Icon(Icons.pause_rounded)
                 : const Icon(Icons.play_arrow_rounded),
             color: Colors.white,
             iconSize: 34,
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                songProvider.playNext();
+              });
+            },
             icon: const Icon(Icons.skip_next_rounded),
             color: Colors.white,
             iconSize: 34,

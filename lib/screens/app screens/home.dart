@@ -2,15 +2,28 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/models/playlist.dart';
+import 'package:music_app/providers/playlists_provider.dart';
+import 'package:music_app/providers/recent_played_provider.dart';
+import 'package:music_app/providers/song_provider.dart';
+import 'package:music_app/screens/common%20screens/song_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/song.dart';
 import '../../widgets/widgets.dart';
 import 'components/custom_search.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  Stream<List<Song>> readSongs() => FirebaseFirestore.instance
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Stream<List<Song>> readSongs;
+  late Future<List<Playlist>> readPlaylist;
+
+  Stream<List<Song>> getSongs() => FirebaseFirestore.instance
       .collection('songs')
       .snapshots()
       .map((snapshot) =>
@@ -25,7 +38,20 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    readSongs = getSongs();
+    readPlaylist = getPlaylists();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    PlaylistsProvider playlistsProvider =
+        Provider.of<PlaylistsProvider>(context);
+    SongProvider songProvider = Provider.of<SongProvider>(context);
+    RecentProvider recentProvider = Provider.of<RecentProvider>(context);
+    List<Song> recent = recentProvider.recent.reversed.toList();
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -40,121 +66,227 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      child: StreamBuilder<List<Song>>(
-                        stream: readSongs(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return const Text('something went wrong!');
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Text('loading!');
-                          }
-
-                          final songs = snapshot.data!;
-                          return Column(
-                            children: [
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.workspaces_filled),
-                                    color: Colors.white,
-                                  ),
-                                  //search Icon
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SearchScreen(songs: songs)));
-                                    },
-                                    icon: const Icon(
-                                      Icons.search,
+        backgroundColor: const Color(0xFF1F1A30),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: const [0.1, 0.4, 0.7, 0.9],
+              colors: [
+                const Color.fromARGB(0, 5, 114, 117).withOpacity(0.8),
+                const Color.fromARGB(0, 114, 103, 6),
+                const Color.fromARGB(0, 80, 30, 85),
+                const Color.fromARGB(0, 155, 4, 168),
+              ],
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: StreamBuilder<List<Song>>(
+                          stream: readSongs,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return const Text('something went wrong!');
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Text('loading!');
+                            }
+                            final songs = snapshot.data!;
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.workspaces_filled),
                                       color: Colors.white,
                                     ),
-                                    splashColor: Colors.grey[400],
+                                    //search Icon
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SearchScreen(
+                                                        songs: songs)));
+                                      },
+                                      icon: const Icon(
+                                        Icons.search,
+                                        color: Colors.white,
+                                      ),
+                                      splashColor: Colors.grey[400],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 20),
+                                  child: SectionHeader(
+                                    title: 'All songs',
+                                    action: 'View more',
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(right: 20),
-                                child: SectionHeader(title: 'Trending Music'),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              CarouselSlider(
-                                  items: songs.map((index) {
-                                    return SongCard(song: index);
-                                  }).toList(),
-                                  options: CarouselOptions(
-                                    aspectRatio: 2,
-                                    onPageChanged: (index, reason) {},
-                                    enlargeCenterPage: true,
-                                    enlargeFactor: .2,
-                                    height: 260,
-                                    autoPlay: true,
-                                  )),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Column(
-                    children: [
-                      const SectionHeader(title: 'Playlist'),
-                      FutureBuilder<List<Playlist>>(
-                        future: getPlaylists(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          } else if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Text('loading!');
-                          } else if (snapshot.hasData) {
-                            var playlists = snapshot.data!;
-                            return ListView.builder(
-                              padding: const EdgeInsets.only(top: 20),
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: playlists.length,
-                              itemBuilder: (context, index) {
-                                return PlaylistCard(playlist: playlists[index]);
-                              },
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                CarouselSlider(
+                                    items: songs.map((index) {
+                                      return SongCard(song: index);
+                                    }).toList(),
+                                    options: CarouselOptions(
+                                        aspectRatio: 2,
+                                        onPageChanged: (index, reason) {},
+                                        enlargeCenterPage: true,
+                                        enlargeFactor: .3,
+                                        height: 260,
+                                        autoPlay: true,
+                                        autoPlayAnimationDuration:
+                                            const Duration(
+                                                milliseconds: 2400))),
+                              ],
                             );
-                          } else {
-                            return const Text(
-                                'No topics found in Firestore. Check database');
-                          }
-                        },
+                          },
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  recent.isNotEmpty
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            const SectionHeader(
+                              title: 'Recent song',
+                              action: '',
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
+                                child: Row(
+                                  children: [
+                                    ...List.generate(
+                                        recent.length,
+                                        (index) => Padding(
+                                              padding: index == 0
+                                                  ? const EdgeInsets.only(
+                                                      left: 10, right: 10)
+                                                  : const EdgeInsets.only(
+                                                      right: 10),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  songProvider
+                                                      .setSong(recent[index]);
+
+                                                  playlistsProvider
+                                                      .currentPlaylist = null;
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const SongScreen()));
+                                                },
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.35,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.35,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          image: DecorationImage(
+                                                              image: NetworkImage(
+                                                                  recent[index]
+                                                                      .imageUrl),
+                                                              fit: BoxFit
+                                                                  .cover)),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    Text(
+                                                      recent[index].songName,
+                                                      maxLines: 2,
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: Column(
+                      children: [
+                        const SectionHeader(
+                          title: 'Playlist',
+                          action: '',
+                        ),
+                        FutureBuilder<List<Playlist>>(
+                          future: readPlaylist,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Text('loading!');
+                            } else if (snapshot.hasData) {
+                              var playlists = snapshot.data!;
+                              return ListView.builder(
+                                padding: const EdgeInsets.only(top: 20),
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: playlists.length,
+                                itemBuilder: (context, index) {
+                                  return PlaylistCard(
+                                      playlist: playlists[index]);
+                                },
+                              );
+                            } else {
+                              return const Text(
+                                  'No topics found in Firestore. Check database');
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

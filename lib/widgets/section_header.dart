@@ -4,7 +4,7 @@ class SectionHeader extends StatelessWidget {
   const SectionHeader({
     super.key,
     required this.title,
-    this.action = 'View more',
+    required this.action,
   });
 
   final String title;

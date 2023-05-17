@@ -85,7 +85,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return GestureDetector(
       onTap: () {
-        songProvider.currentSong = song;
+        songProvider.setSong(song);
         Get.toNamed('/song', arguments: song);
       },
       child: Row(

@@ -1,5 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music_app/models/playlist.dart';
 import 'package:music_app/providers/fav_provider.dart';
+import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import '../models/song.dart';
@@ -11,12 +14,19 @@ class MusicItem extends StatelessWidget {
     required this.favProvider,
     required this.songProvider,
     required this.recentProvider,
+    required this.index,
+    required this.songs,
+    required this.playlist,
+    required this.playlistsProvider,
   });
-
+  final int index;
   final Song song;
+  final List<Song> songs;
+  final Playlist playlist;
   final FavProvider favProvider;
   final SongProvider songProvider;
   final RecentProvider recentProvider;
+  final PlaylistsProvider playlistsProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +36,15 @@ class MusicItem extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              songProvider.isPlaying
-                  ? songProvider.audioPlayer.pause()
-                  : songProvider.currentSong = song;
+              songProvider.state == PlayerState.PLAYING
+                  ? {
+                      songProvider.audioPlayer.pause(),
+                      songProvider.state = PlayerState.STOPPED
+                    }
+                  : {
+                      songProvider.setPlaylist(songs, index: index),
+                      songProvider.state = PlayerState.PLAYING
+                    };
 
               recentProvider.setRecent(song);
             },
@@ -46,7 +62,7 @@ class MusicItem extends StatelessWidget {
                           fit: BoxFit.cover)),
                 ),
                 Icon(
-                  songProvider.isPlaying &&
+                  songProvider.state == PlayerState.PLAYING &&
                           songProvider.currentSong!.id == song.id
                       ? Icons.pause
                       : Icons.play_arrow_rounded,

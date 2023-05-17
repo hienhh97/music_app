@@ -4,7 +4,7 @@ import 'package:music_app/providers/song_provider.dart';
 import 'package:music_app/screens/app%20screens/account.dart';
 import 'package:music_app/screens/app%20screens/home.dart';
 import 'package:music_app/screens/app%20screens/notification.dart';
-import 'package:music_app/screens/app%20screens/trending.dart';
+import 'package:music_app/screens/app%20screens/library.dart';
 import 'package:music_app/screens/common%20screens/song_screen.dart';
 import 'package:music_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   //Navigate to different pages
   final List<Widget> _children = const [
     HomeScreen(),
-    TrendingScreen(),
+    LibraryScreen(),
     NotificationScreen(),
     AccountScreen(),
   ];
@@ -78,7 +78,9 @@ class _HomeState extends State<Home> {
                       iconSize: 24,
                       tabs: const [
                         GButton(icon: Icons.home, text: 'Home'),
-                        GButton(icon: Icons.trending_up, text: 'Trending'),
+                        GButton(
+                            icon: Icons.my_library_music_outlined,
+                            text: 'Library'),
                         GButton(
                           icon: Icons.notifications,
                           text: 'Notification',

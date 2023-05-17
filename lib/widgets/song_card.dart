@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_app/providers/playlists_provider.dart';
+import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
@@ -15,11 +17,16 @@ class SongCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SongProvider songProvider = Provider.of<SongProvider>(context);
+    RecentProvider recentProvider = Provider.of<RecentProvider>(context);
+    PlaylistsProvider playlistsProvider =
+        Provider.of<PlaylistsProvider>(context);
 
     return InkWell(
       onTap: () {
-        songProvider.currentSong = song;
+        songProvider.setSong(song);
         Get.toNamed('/song', arguments: song);
+        recentProvider.setRecent(song);
+        playlistsProvider.currentPlaylist = null;
       },
       child: Container(
         margin: const EdgeInsets.only(right: 10),

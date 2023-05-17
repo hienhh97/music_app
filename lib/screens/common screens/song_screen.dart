@@ -1,13 +1,17 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music_app/models/song.dart';
 import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:music_app/screens/common%20screens/playlist_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:music_app/const.dart';
+
+import '../../const.dart';
 
 class SongScreen extends StatefulWidget {
-  const SongScreen({super.key});
+  const SongScreen({super.key, this.currentSong});
+  final Song? currentSong;
 
   @override
   State<SongScreen> createState() => _SongScreenState();
@@ -69,6 +73,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                     Icons.favorite_border,
                   ),
           ),
+
           const SizedBox(
             width: 15,
           ),
@@ -146,6 +151,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                     songProvider.playProgress = value;
                     songProvider.audioPlayer
                         .seek(Duration(milliseconds: value.toInt()));
+                    songProvider.state = PlayerState.PLAYING;
                     songProvider.audioPlayer.resume();
                   },
                   onChangeEnd: (value) {},
@@ -172,15 +178,21 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.shuffle_outlined,
-                        color: Colors.white,
-                      ),
+                      onPressed: () {
+                        setState(() {
+                          songProvider.onChangeShuffleMode();
+                        });
+                      },
+                      icon: Icon(Icons.shuffle_outlined,
+                          color: songProvider.shuffleMode
+                              ? Colors.deepPurpleAccent
+                              : Colors.white),
                     ),
                     IconButton(
                       iconSize: 45,
-                      onPressed: () {},
+                      onPressed: () {
+                        songProvider.playPrevious();
+                      },
                       icon: const Icon(
                         Icons.skip_previous,
                         color: Colors.white,
@@ -188,16 +200,14 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                       onTap: () {
-                        if (songProvider.isPlaying) {
-                          songProvider.audioPlayer.pause();
-                        } else {
-                          songProvider.audioPlayer.resume();
-                        }
+                        setState(() {
+                          songProvider.onChangePlayerState();
+                        });
                       },
                       child: Container(
                         padding: const EdgeInsets.all(5),
                         child: Icon(
-                          songProvider.isPlaying
+                          songProvider.state == PlayerState.PLAYING
                               ? Icons.pause_circle
                               : Icons.play_circle,
                           size: 75,
@@ -207,18 +217,32 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                     ),
                     IconButton(
                       iconSize: 45,
-                      onPressed: () {},
+                      onPressed: () {
+                        Future.delayed(const Duration(seconds: 1), () {
+                          songProvider.playNext();
+                        });
+                      },
                       icon: const Icon(
                         Icons.skip_next,
                         color: Colors.white,
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.repeat,
-                        color: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          songProvider.onChangeRepeatMode();
+                        });
+                      },
+                      icon: Icon(
+                        songProvider.repeatMode == RepeatMode.off
+                            ? Icons.repeat_rounded
+                            : (songProvider.repeatMode == RepeatMode.one
+                                ? Icons.repeat_one_rounded
+                                : Icons.repeat_rounded),
                       ),
+                      color: songProvider.repeatMode == RepeatMode.off
+                          ? Colors.white
+                          : Colors.deepPurpleAccent,
                     ),
                   ],
                 ),
@@ -292,148 +316,6 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
     );
   }
 }
-
-// class _MusicPlayer extends StatefulWidget {
-//   const _MusicPlayer({
-//     required this.song,
-//     //required Stream<SeekBarData> seekBarDataStream,
-//     //required this.audioPlayer,
-//   }) //: _seekBarDataStream = seekBarDataStream;
-
-//   final Song song;
-//   final Stream<SeekBarData> _seekBarDataStream;
-//   final AudioPlayer audioPlayer;
-
-//   @override
-//   State<_MusicPlayer> createState() => _MusicPlayerState();
-// }
-
-// class _MusicPlayerState extends State<_MusicPlayer>
-//     with TickerProviderStateMixin {
-//   late AnimationController controller;
-//   late Animation<double> animation;
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     controller =
-//         AnimationController(vsync: this, duration: const Duration(seconds: 14));
-//     animation = ReverseAnimation(controller);
-//     controller.repeat();
-//   }
-
-//   @override
-//   void dispose() {
-//     controller.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(
-//         horizontal: 20.0,
-//         vertical: 40.0,
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.end,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           Text(
-//             widget.song.songName,
-//             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-//                   color: Colors.white,
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 35,
-//                 ),
-//           ),
-//           const SizedBox(
-//             height: 5,
-//           ),
-//           Text(
-//             widget.song.singer,
-//             maxLines: 2,
-//             style: Theme.of(context).textTheme.bodySmall!.copyWith(
-//                   color: Colors.white,
-//                   fontSize: 20,
-//                   fontStyle: FontStyle.italic,
-//                 ),
-//           ),
-//           const SizedBox(
-//             height: 50,
-//           ),
-//           RotationTransition(
-//             turns: animation,
-//             alignment: Alignment.center,
-//             child: CircleAvatar(
-//               backgroundColor: Colors.transparent,
-//               backgroundImage: NetworkImage(widget.song.imageUrl),
-//               radius: screenWidth / 3,
-//             ),
-//           ),
-//           const SizedBox(
-//             height: 70,
-//           ),
-//           StreamBuilder(
-//             stream: widget._seekBarDataStream,
-//             builder: (context, snapshot) {
-//               final positionData = snapshot.data;
-//               return SeekBar(
-//                 position: positionData?.position ?? Duration.zero,
-//                 duration: positionData?.duration ?? Duration.zero,
-//                 onChangeEnd: widget.audioPlayer.seek,
-//               );
-//             },
-//           ),
-//           PlayerButton(audioPlayer: widget.audioPlayer),
-//           const SizedBox(
-//             height: 30,
-//           ),
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               IconButton(
-//                 iconSize: 30,
-//                 onPressed: () {},
-//                 icon: const Icon(
-//                   Icons.mode_comment_outlined,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//               IconButton(
-//                 iconSize: 30,
-//                 onPressed: () {},
-//                 icon: const Icon(
-//                   Icons.favorite_outline,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//               IconButton(
-//                 iconSize: 30,
-//                 onPressed: () {},
-//                 icon: const Icon(
-//                   Icons.downloading_outlined,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//               IconButton(
-//                 iconSize: 30,
-//                 onPressed: () {},
-//                 icon: const Icon(
-//                   Icons.playlist_add,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//             ],
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class _BackgroundFilter extends StatelessWidget {
   const _BackgroundFilter({

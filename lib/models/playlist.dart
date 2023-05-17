@@ -1,5 +1,4 @@
 import 'package:music_app/models/song.dart';
-import '../providers/song_provider.dart';
 
 class Playlist {
   final String id;

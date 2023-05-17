@@ -20,7 +20,6 @@ class PlaylistCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        playlistsProvider.currentPlaylist = playlist;
         Get.toNamed('/playlist', arguments: playlist);
       },
       child: Container(

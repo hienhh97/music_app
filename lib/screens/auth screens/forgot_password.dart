@@ -45,49 +45,86 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepOrange[200],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25),
-            child: Text(
-              "Enter your E-mail and we will send you reset password link!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
-            ),
+      backgroundColor: const Color(0xFF1F1A30),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: const [0.1, 0.4, 0.7, 0.9],
+            colors: [
+              const Color.fromARGB(0, 170, 95, 9).withOpacity(0.8),
+              const Color.fromARGB(0, 26, 119, 156),
+              const Color.fromARGB(0, 111, 18, 119),
+              const Color.fromARGB(0, 111, 18, 119),
+            ],
           ),
-          const SizedBox(
-            height: 25,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Card(
+                elevation: 5,
+                color:
+                    const Color.fromARGB(255, 171, 211, 250).withOpacity(0.4),
+                child: Container(
+                  width: 400,
+                  padding: const EdgeInsets.all(40.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Enter your E-mail and we will send you reset password link!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 30, color: Colors.white),
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+
+                      //email textfiled
+                      TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(12)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.purple),
+                                borderRadius: BorderRadius.circular(12)),
+                            hintText: "Email",
+                            fillColor: Colors.white,
+                            filled: true,
+                          )),
+                      const SizedBox(height: 12),
+
+                      //submit button
+                      GestureDetector(
+                        onTap: passwordReset,
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Center(
+                              child: Text('Take a reset link',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-
-          //email textfiled
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(12)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.purple),
-                        borderRadius: BorderRadius.circular(12)),
-                    hintText: "Email",
-                    fillColor: Colors.white,
-                    filled: true,
-                  ))),
-          SizedBox(height: 12),
-
-          //submit button
-          MaterialButton(
-            onPressed: passwordReset,
-            child: Text("Reset Password"),
-            color: Colors.deepPurple[200],
-          )
-        ],
+        ),
       ),
     );
   }

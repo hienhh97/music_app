@@ -1,5 +1,7 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:music_app/models/playlist.dart';
 import 'package:music_app/models/song.dart';
 import 'package:music_app/providers/playlists_provider.dart';
@@ -19,6 +21,8 @@ class PlaylistScreen extends StatefulWidget {
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
   late Future<List<Song>> readData;
+
+  Playlist playlist = Get.arguments;
 
   Future<List<Song>> getData() async {
     var ref = FirebaseFirestore.instance.collection('songs');
@@ -57,178 +61,116 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
           backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: const Text('Playlist'),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                _PlaylistInfor(playlist: playlistsProvider.currentPlaylist!),
-                const SizedBox(
-                  height: 30,
-                ),
-                const _PlayOrShuffle(),
-                const SizedBox(
-                  height: 30,
-                ),
-                FutureBuilder<List<Song>?>(
-                  future: readData,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Text('somethings has wrong!!');
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const Text('');
-                    }
-                    {
-                      final allSongs = snapshot.data!;
-                      //get list of songs by songID
-                      for (var songID
-                          in playlistsProvider.currentPlaylist!.songIDs) {
-                        for (var song in allSongs) {
-                          if (song.id == songID) {
-                            songs.add(song);
-                          }
-                        }
-                      }
-                      return ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: songs.length,
-                        itemBuilder: (context, index) {
-                          //list song proview
-                          return MusicItem(
-                            song: songs[index],
-                            favProvider: favProvider,
-                            songProvider: songProvider,
-                            recentProvider: recentProvider,
-                          );
-                        },
-                      );
-                    }
-                  },
-                )
-              ],
-            ),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text('Playlist'),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PlaylistSong extends StatelessWidget {
-  const _PlaylistSong({
-    super.key,
-    required this.playlist,
-  });
-
-  final Playlist playlist;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class _PlayOrShuffle extends StatefulWidget {
-  const _PlayOrShuffle({
-    super.key,
-  });
-
-  @override
-  State<_PlayOrShuffle> createState() => _PlayOrShuffleState();
-}
-
-class _PlayOrShuffleState extends State<_PlayOrShuffle> {
-  bool isPlay = true;
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isPlay = !isPlay;
-        });
-      },
-      child: Container(
-        height: 50,
-        width: width,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 100),
-              left: isPlay ? 0 : width * 0.45,
-              child: Container(
-                height: 50,
-                width: width * 0.45,
-                decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          'Play',
-                          style: TextStyle(
-                            color: isPlay ? Colors.white : Colors.deepOrange,
-                            fontSize: 18,
-                          ),
+          body: FutureBuilder<List<Song>?>(
+            future: readData,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('somethings has wrong!!');
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('');
+              }
+              {
+                final allSongs = snapshot.data!;
+                //get list of songs by songID
+                for (var songID in playlist.songIDs) {
+                  for (var song in allSongs) {
+                    if (song.id == songID) {
+                      songs.add(song);
+                    }
+                  }
+                }
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        _PlaylistInfor(playlist: playlist),
+                        const SizedBox(
+                          height: 30,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Icon(
-                        Icons.play_circle,
-                        color: isPlay ? Colors.white : Colors.deepOrange,
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Text(
-                          'Shuffle',
-                          style: TextStyle(
-                            color: isPlay ? Colors.deepOrange : Colors.white,
-                            fontSize: 18,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                songProvider.setPlaylist(songs, index: 0);
+                                playlistsProvider.currentPlaylist = playlist;
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(25)),
+                                child: Center(
+                                    child: Row(
+                                  children: const [
+                                    Text('Play',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)),
+                                    Icon(
+                                      Icons.play_arrow_rounded,
+                                      size: 38,
+                                    )
+                                  ],
+                                )),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                songProvider.setPlaylist(songs, shuffle: true);
+                                playlistsProvider.currentPlaylist = playlist;
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(25)),
+                                child: const Center(
+                                    child: Text('Shuffle',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold))),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Icon(
-                        Icons.shuffle,
-                        color: isPlay ? Colors.deepOrange : Colors.white,
-                      )
-                    ],
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: songs.length,
+                          itemBuilder: (context, index) {
+                            //list song proview
+                            return MusicItem(
+                              song: songs[index],
+                              songs: songs,
+                              playlist: playlist,
+                              playlistsProvider: playlistsProvider,
+                              index: index,
+                              favProvider: favProvider,
+                              songProvider: songProvider,
+                              recentProvider: recentProvider,
+                            );
+                          },
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
+                );
+              }
+            },
+          )),
     );
   }
 }
