@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';

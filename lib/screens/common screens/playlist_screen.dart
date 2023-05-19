@@ -1,7 +1,5 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:music_app/models/playlist.dart';
 import 'package:music_app/models/song.dart';
 import 'package:music_app/providers/playlists_provider.dart';
