@@ -119,10 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onPressed: () {
                                         Navigator.push(
                                             context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SearchScreen(
-                                                        songs: songs)));
+                                            AnimatedPageRoute(
+                                                child:
+                                                    SearchScreen(songs: songs),
+                                                direction: AxisDirection.left));
                                       },
                                       icon: const Icon(
                                         Icons.search,
@@ -199,9 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       .currentPlaylist = null;
                                                   Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const SongScreen()));
+                                                      AnimatedPageRoute(
+                                                          child:
+                                                              const SongScreen(),
+                                                          direction:
+                                                              AxisDirection
+                                                                  .up));
                                                 },
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -248,6 +251,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         )
                       : Container(),
+
+                  //Playlists preview
                   Padding(
                     padding: const EdgeInsets.only(top: 30),
                     child: Column(

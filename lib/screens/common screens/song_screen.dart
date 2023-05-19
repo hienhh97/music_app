@@ -18,22 +18,24 @@ class SongScreen extends StatefulWidget {
 }
 
 class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
-  late AnimationController controller;
+  late AnimationController _songImgController, _playButtonController;
   late Animation<double> animation;
 
   @override
   void initState() {
     super.initState();
 
-    controller =
+    _songImgController =
         AnimationController(vsync: this, duration: const Duration(seconds: 14));
-    animation = ReverseAnimation(controller);
-    controller.repeat();
+    animation = ReverseAnimation(_songImgController);
+    _songImgController.repeat();
+    _playButtonController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _songImgController.dispose();
     super.dispose();
   }
 
@@ -126,6 +128,7 @@ class _SongScreenState extends State<SongScreen> with TickerProviderStateMixin {
                 const SizedBox(
                   height: 50,
                 ),
+                //Rotate song image
                 RotationTransition(
                   turns: animation,
                   alignment: Alignment.center,

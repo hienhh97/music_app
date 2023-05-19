@@ -30,7 +30,6 @@ class _CurrentSongState extends State<CurrentSong> {
           Padding(
             padding: const EdgeInsets.only(left: 2),
             child: CircleAvatar(
-              backgroundColor: Colors.transparent,
               backgroundImage:
                   NetworkImage(songProvider.currentSong?.imageUrl ?? ''),
               radius: 23,

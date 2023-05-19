@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:music_app/providers/playlists_provider.dart';
+import 'package:music_app/screens/common%20screens/playlist_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../models/playlist.dart';
+import 'widgets.dart';
 
 class PlaylistCard extends StatelessWidget {
   const PlaylistCard({
@@ -17,10 +18,13 @@ class PlaylistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     PlaylistsProvider playlistsProvider =
         Provider.of<PlaylistsProvider>(context);
-
     return InkWell(
       onTap: () {
-        Get.toNamed('/playlist', arguments: playlist);
+        playlistsProvider.selectedPlaylist = playlist;
+        Navigator.push(
+            context,
+            AnimatedPageRoute(
+                child: const PlaylistScreen(), direction: AxisDirection.left));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),

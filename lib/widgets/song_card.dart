@@ -5,6 +5,8 @@ import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
+import '../screens/common screens/song_screen.dart';
+import 'widgets.dart';
 
 class SongCard extends StatelessWidget {
   const SongCard({
@@ -24,7 +26,10 @@ class SongCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         songProvider.setSong(song);
-        Get.toNamed('/song', arguments: song);
+        Navigator.push(
+            context,
+            AnimatedPageRoute(
+                child: const SongScreen(), direction: AxisDirection.up));
         recentProvider.setRecent(song);
         playlistsProvider.currentPlaylist = null;
       },

@@ -128,7 +128,7 @@ class _UploadNewSongState extends State<UploadNewSong> {
                     child: Image.file(
                       File(pickedImageFile!.path!),
                       width: double.infinity,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitHeight,
                     ),
                   ),
                 ),
@@ -164,7 +164,7 @@ class _UploadNewSongState extends State<UploadNewSong> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text('Select Song from your device'),
+                    Text('Select Song file from your device'),
                   ],
                 ),
               ),

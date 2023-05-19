@@ -1,5 +1,3 @@
-import 'package:music_app/models/song.dart';
-
 class Playlist {
   final String id;
   final String title;
@@ -26,9 +24,5 @@ class Playlist {
         imageUrl: json['imageUrl'] as String? ?? '',
         songIDs:
             (json['songIDs'] as List<dynamic>).map((e) => e as String).toList(),
-        // songs: (json['songs'] as List<dynamic>?)
-        //         ?.map((e) => Song.fromJson(e as Map<String, dynamic>))
-        //         .toList() ??
-        //     const [],
       );
 }

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:music_app/providers/song_provider.dart';
@@ -51,9 +52,12 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const SongScreen(),
-                              ));
+                              AnimatedPageRoute(
+                                  child: const SongScreen(),
+                                  direction: AxisDirection.up));
+
+                          songProvider.audioPlayer.resume();
+                          songProvider.state = PlayerState.PLAYING;
                         },
                         child: const CurrentSong()) // display on
                     : Container(),

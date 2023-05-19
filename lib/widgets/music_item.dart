@@ -43,7 +43,8 @@ class MusicItem extends StatelessWidget {
                     }
                   : {
                       songProvider.setPlaylist(songs, index: index),
-                      songProvider.state = PlayerState.PLAYING
+                      songProvider.state = PlayerState.PLAYING,
+                      playlistsProvider.currentPlaylist = playlist,
                     };
 
               recentProvider.setRecent(song);

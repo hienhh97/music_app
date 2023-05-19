@@ -22,8 +22,6 @@ class PlaylistScreen extends StatefulWidget {
 class _PlaylistScreenState extends State<PlaylistScreen> {
   late Future<List<Song>> readData;
 
-  Playlist playlist = Get.arguments;
-
   Future<List<Song>> getData() async {
     var ref = FirebaseFirestore.instance.collection('songs');
     var snapshot = await ref.get();
@@ -78,7 +76,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               {
                 final allSongs = snapshot.data!;
                 //get list of songs by songID
-                for (var songID in playlist.songIDs) {
+                for (var songID
+                    in playlistsProvider.selectedPlaylist!.songIDs) {
                   for (var song in allSongs) {
                     if (song.id == songID) {
                       songs.add(song);
@@ -90,7 +89,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        _PlaylistInfor(playlist: playlist),
+                        _PlaylistInfor(
+                            playlist: playlistsProvider.selectedPlaylist!),
                         const SizedBox(
                           height: 30,
                         ),
@@ -100,7 +100,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             GestureDetector(
                               onTap: () {
                                 songProvider.setPlaylist(songs, index: 0);
-                                playlistsProvider.currentPlaylist = playlist;
+                                playlistsProvider.currentPlaylist =
+                                    playlistsProvider.selectedPlaylist;
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(20),
@@ -126,7 +127,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             GestureDetector(
                               onTap: () {
                                 songProvider.setPlaylist(songs, shuffle: true);
-                                playlistsProvider.currentPlaylist = playlist;
+                                playlistsProvider.currentPlaylist =
+                                    playlistsProvider.selectedPlaylist;
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(20),
@@ -155,7 +157,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             return MusicItem(
                               song: songs[index],
                               songs: songs,
-                              playlist: playlist,
+                              playlist: playlistsProvider.selectedPlaylist!,
                               playlistsProvider: playlistsProvider,
                               index: index,
                               favProvider: favProvider,
