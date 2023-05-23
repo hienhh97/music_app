@@ -1,28 +1,49 @@
-class User {
-  final String uid;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class UserModel {
+  final String? uid;
+  final String? id;
   final String firstName;
   final String lastName;
   final int age;
   final String email;
-  final List<String> userFavSongs;
+  final String password;
+  final String? image;
 
-  User({
-    this.age = 0,
-    this.email = '',
-    this.firstName = '',
-    this.lastName = '',
-    this.uid = '',
-    this.userFavSongs = const [],
+  const UserModel({
+    this.uid,
+    this.id,
+    required this.age,
+    required this.email,
+    required this.password,
+    required this.firstName,
+    required this.lastName,
+    this.image,
   });
 
-  static User fromJson(Map<String, dynamic> json) => User(
-        uid: json['uid'] as String? ?? '',
-        firstName: json['firstname'] as String? ?? '',
-        lastName: json['lastname'] as String? ?? '',
-        age: json['age'] as int? ?? 0,
-        email: json['email'] as String? ?? '',
-        userFavSongs: (json['userFavSongs'] as List<dynamic>)
-            .map((e) => e as String)
-            .toList(),
-      );
+  toJson() {
+    return {
+      'firstname': firstName,
+      'lastname': lastName,
+      'password': password,
+      'age': age,
+      'email': email,
+      'image': image,
+    };
+  }
+
+  factory UserModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> document) {
+    final data = document.data()!;
+    return UserModel(
+      id: document.id,
+      uid: data["uid"],
+      firstName: data["firstname"],
+      lastName: data["lastname"],
+      password: data["password"],
+      age: data["age"],
+      email: data["email"],
+      image: data['image'],
+    );
+  }
 }

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -39,29 +37,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future signUp() async {
     if (passwordConfirmed()) {
       //create user
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      //add user details
-      addUserDetails(
-        _firstNameController.text.trim(),
-        _lastNameController.text.trim(),
-        _emailController.text.trim(),
-        int.parse(_ageController.text.trim()),
-      );
+      try {
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: _emailController.text.trim(),
+                password: _passwordController.text.trim())
+            .then((value) {
+          FirebaseFirestore.instance.collection('users').doc().set({
+            "uid": value.user!.uid,
+            'firstname': _firstNameController.text.trim(),
+            'lastname': _lastNameController.text.trim(),
+            'email': _emailController.text.trim(),
+            'age': int.parse(_ageController.text.trim()),
+            'password': _passwordController.text.trim(),
+            'image': null,
+          });
+        });
+      } on FirebaseAuthException catch (e) {
+        if (e.code == "email-already-in-use") {
+          emailInUse();
+        } else {
+          unexpectedError();
+        }
+      }
     }
-  }
-
-  Future addUserDetails(
-      String firstName, String lastName, String email, int age) async {
-    await FirebaseFirestore.instance.collection("users").add({
-      'firstname': firstName,
-      'lastname': lastName,
-      'email': email,
-      'age': age,
-    });
   }
 
   bool passwordConfirmed() {
@@ -73,13 +72,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  void emailInUse() {
+    showDialog(
+        context: context,
+        builder: (content) {
+          return const AlertDialog(
+              title: Text("Email in use by a different person!"));
+        });
+  }
+
+  void unexpectedError() {
+    showDialog(
+        context: context,
+        builder: (content) {
+          return const AlertDialog(title: Text("An unexpected error"));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Color(0xFF1F1A30),
+        backgroundColor: const Color(0xFF1F1A30),
         body: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -87,10 +103,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 end: Alignment.bottomRight,
                 stops: const [0.1, 0.4, 0.7, 0.9],
                 colors: [
-                  Color.fromARGB(0, 170, 95, 9).withOpacity(0.8),
-                  Color.fromARGB(0, 26, 119, 156),
-                  Color.fromARGB(0, 44, 2, 48),
-                  Color.fromARGB(0, 111, 18, 119),
+                  const Color.fromARGB(0, 170, 95, 9).withOpacity(0.8),
+                  const Color.fromARGB(0, 26, 119, 156),
+                  const Color.fromARGB(0, 44, 2, 48),
+                  const Color.fromARGB(0, 111, 18, 119),
                 ],
               ),
             ),
@@ -100,13 +116,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                       Image.asset(
                         'assets/login-screen-icon.png',
                         width: 100,
                         height: 100,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Card(
                         elevation: 5,
                         color: const Color.fromARGB(255, 171, 211, 250)
@@ -129,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     color: Colors.white),
                               ),
 
-                              SizedBox(height: 25),
+                              const SizedBox(height: 25),
 
                               //first name textfiled
                               TextFormField(
@@ -137,38 +153,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.white),
+                                          const BorderSide(color: Colors.white),
                                       borderRadius: BorderRadius.circular(12)),
                                   focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.purple),
+                                      borderSide: const BorderSide(
+                                          color: Colors.purple),
                                       borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: Icon(Icons.abc),
+                                  prefixIcon: const Icon(Icons.abc),
                                   hintText: "First name",
                                   fillColor: Colors.white,
                                   filled: true,
                                 ),
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
                               //last name textfiled
                               TextFormField(
                                 controller: _lastNameController,
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.white),
+                                          const BorderSide(color: Colors.white),
                                       borderRadius: BorderRadius.circular(12)),
                                   focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.purple),
+                                      borderSide: const BorderSide(
+                                          color: Colors.purple),
                                       borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: Icon(Icons.abc),
+                                  prefixIcon: const Icon(Icons.abc),
                                   hintText: "Last name",
                                   fillColor: Colors.white,
                                   filled: true,
                                 ),
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
 
                               //age textfiled
                               TextFormField(
@@ -176,13 +192,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.white),
+                                          const BorderSide(color: Colors.white),
                                       borderRadius: BorderRadius.circular(12)),
                                   focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.purple),
+                                      borderSide: const BorderSide(
+                                          color: Colors.purple),
                                       borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: Icon(Icons.numbers_outlined),
+                                  prefixIcon:
+                                      const Icon(Icons.numbers_outlined),
                                   hintText: "Enter your age",
                                   fillColor: Colors.white,
                                   filled: true,
@@ -197,7 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   }
                                 },
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
 
                               //email textfiled
                               TextFormField(
@@ -205,13 +222,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.white),
+                                          const BorderSide(color: Colors.white),
                                       borderRadius: BorderRadius.circular(12)),
                                   focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.purple),
+                                      borderSide: const BorderSide(
+                                          color: Colors.purple),
                                       borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: Icon(Icons.email_outlined),
+                                  prefixIcon: const Icon(Icons.email_outlined),
                                   hintText: "Email",
                                   fillColor: Colors.white,
                                   filled: true,
@@ -226,7 +243,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   }
                                 },
                               ),
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
 
                               //password TextFormField
                               TextFormField(
@@ -235,20 +252,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.white),
+                                          const BorderSide(color: Colors.white),
                                       borderRadius: BorderRadius.circular(12)),
                                   focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.purple),
+                                      borderSide: const BorderSide(
+                                          color: Colors.purple),
                                       borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: Icon(Icons.lock_open_outlined),
+                                  prefixIcon:
+                                      const Icon(Icons.lock_open_outlined),
                                   hintText: "Password",
                                   fillColor: Colors.white,
                                   filled: true,
                                 ),
                               ),
 
-                              SizedBox(
+                              const SizedBox(
                                 height: 12,
                               ),
 
@@ -258,32 +276,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
+                                        borderSide: const BorderSide(
+                                            color: Colors.white),
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                     focusedBorder: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.purple),
+                                        borderSide: const BorderSide(
+                                            color: Colors.purple),
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    prefixIcon: Icon(Icons.lock_open_outlined),
+                                    prefixIcon:
+                                        const Icon(Icons.lock_open_outlined),
                                     hintText: "Confirm Password",
                                     fillColor: Colors.white,
                                     filled: true,
                                   )),
 
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
 
                               //Sign button
                               GestureDetector(
                                 onTap: signUp,
                                 child: Container(
-                                  padding: EdgeInsets.all(20),
+                                  padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                       color: Colors.blue,
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
+                                  child: const Center(
                                       child: Text('Sign up',
                                           style: TextStyle(
                                               color: Colors.white,
@@ -295,22 +314,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 25,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 25),
+                        padding: const EdgeInsets.only(left: 25),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               "I'm a member! ",
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white),
                             ),
                             GestureDetector(
                               onTap: widget.showLoginScreen,
-                              child: Text(
+                              child: const Text(
                                 "Go to Login!",
                                 style: TextStyle(
                                     color: Colors.blue,
@@ -321,7 +340,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 45,
                       )
                     ],

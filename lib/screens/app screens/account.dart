@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:music_app/screens/common%20screens/edit_acc_info.dart';
 import 'package:music_app/screens/common%20screens/upload_new_song.dart';
 
+import '../../widgets/widgets.dart';
+
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
 
@@ -19,134 +21,123 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/user-bakground.jpg"),
-                fit: BoxFit.cover)),
+      backgroundColor: Colors.blueGrey[900],
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey[900],
+        title: const Center(
+          child: Text(
+            'Profile',
+            style: TextStyle(color: Colors.white, fontSize: 36),
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('users')
-                          .where("uid", isEqualTo: user.uid)
-                          .snapshots(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, i) {
-                              final currentUser = snapshot.data!.docs[i];
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      gradient: LinearGradient(colors: [
-                                        Colors.blueGrey,
-                                        Colors.grey,
-                                      ]),
-                                      border: Border(
-                                          right: BorderSide(
-                                              width: 13,
-                                              color: Colors.purpleAccent))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Row(
-                                      children: [
-                                        CircleAvatar(
+              Column(
+                children: [
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .where("uid", isEqualTo: user.uid)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, i) {
+                            final currentUser = snapshot.data!.docs[i];
+                            return Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  currentUser['image'] != null
+                                      ? CircleAvatar(
                                           backgroundImage: NetworkImage(
                                               currentUser['image']),
                                           radius: 35,
-                                        ),
-                                        const SizedBox(
-                                          width: 15,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "${currentUser['firstname']} ${currentUser['lastname']}",
-                                              style: const TextStyle(
-                                                  fontSize: 25,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white),
-                                            ),
-                                            const SizedBox(
-                                              height: 6,
-                                            ),
-                                            Text(
-                                              currentUser['email'],
-                                              style: const TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
                                         )
-                                      ],
-                                    ),
+                                      : const CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                              'assets/images/user-avatar.png'),
+                                          radius: 45,
+                                        ),
+                                  const SizedBox(
+                                    height: 20,
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    ProfileItem(
-                      icon: Icons.edit,
-                      title: 'Edit profile',
-                      onPress: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EditAccInfo()));
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ProfileItem(
-                      icon: Icons.upload_rounded,
-                      title: 'Upload new song',
-                      onPress: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UploadNewSong()));
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ProfileItem(
-                      icon: Icons.settings,
-                      title: 'Action(Inprogress)',
-                      onPress: () {},
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ProfileItem(
-                      icon: Icons.settings,
-                      title: 'Action(Inprogress)',
-                      onPress: () {},
-                    )
-                  ],
-                ),
+                                  Text(
+                                    "${currentUser['firstname']} ${currentUser["lastname"]}",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 36,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  Text(
+                                    currentUser['email'],
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  const SizedBox(
+                                    height: 50,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                  ProfileItem(
+                    icon: Icons.edit,
+                    title: 'Edit profile',
+                    onPress: () {
+                      Navigator.push(
+                          context,
+                          AnimatedPageRoute(
+                              child: const EditAccInfo(),
+                              direction: AxisDirection.left));
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ProfileItem(
+                    icon: Icons.upload_rounded,
+                    title: 'Upload new song',
+                    onPress: () {
+                      Navigator.push(
+                          context,
+                          AnimatedPageRoute(
+                              child: const UploadNewSong(),
+                              direction: AxisDirection.left));
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ProfileItem(
+                    icon: Icons.settings,
+                    title: 'Action(Inprogress)',
+                    onPress: () {},
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
+
+              const SizedBox(
+                height: 90,
               ),
 
               //sign out button
@@ -168,7 +159,6 @@ class _AccountScreenState extends State<AccountScreen> {
                       debugPrint('Dialog Dismiss from callback $type');
                     },
                   ).show();
-                  //FirebaseAuth.instance.signOut();
                 },
                 child: Container(
                   padding: const EdgeInsets.all(20),
@@ -217,35 +207,38 @@ class ProfileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.grey[100]?.withOpacity(0.1),
+    return GestureDetector(
+      onTap: onPress,
+      child: ListTile(
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: Colors.grey[600]?.withOpacity(0.1),
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
+        title: Text(
+          title,
+          style: const TextStyle(
+              fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white),
         ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-            color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700),
-      ),
-      trailing: Container(
-        width: 30,
-        height: 30,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.grey.withOpacity(.1),
-        ),
-        child: const Icon(
-          Icons.arrow_forward_ios_rounded,
-          size: 18,
-          color: Colors.grey,
+        trailing: Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: Colors.grey.withOpacity(.1),
+          ),
+          child: const Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 18,
+            color: Colors.white,
+          ),
         ),
       ),
     );
