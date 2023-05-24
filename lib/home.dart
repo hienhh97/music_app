@@ -2,11 +2,11 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:music_app/providers/song_provider.dart';
-import 'package:music_app/screens/app%20screens/account.dart';
-import 'package:music_app/screens/app%20screens/home.dart';
-import 'package:music_app/screens/app%20screens/notification.dart';
-import 'package:music_app/screens/app%20screens/library.dart';
-import 'package:music_app/screens/common%20screens/song_screen.dart';
+import 'package:music_app/screens/AppScreens/account.dart';
+import 'package:music_app/screens/AppScreens/home.dart';
+import 'package:music_app/screens/AppScreens/notification.dart';
+import 'package:music_app/screens/AppScreens/library.dart';
+import 'package:music_app/screens/CommonScreens/song_screen.dart';
 import 'package:music_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 

@@ -4,7 +4,7 @@ import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
-import '../screens/common screens/song_screen.dart';
+import '../screens/CommonScreens/song_screen.dart';
 import 'widgets.dart';
 
 class SongCard extends StatelessWidget {

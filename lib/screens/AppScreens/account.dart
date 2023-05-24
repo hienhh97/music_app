@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:music_app/screens/common%20screens/edit_acc_info.dart';
-import 'package:music_app/screens/common%20screens/upload_new_song.dart';
+import 'package:music_app/screens/CommonScreens/edit_acc_info.dart';
+import 'package:music_app/screens/CommonScreens/upload_new_song.dart';
 
 import '../../widgets/widgets.dart';
 
@@ -59,17 +59,32 @@ class _AccountScreenState extends State<AccountScreen> {
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  currentUser['image'] != null
-                                      ? CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              currentUser['image']),
-                                          radius: 35,
-                                        )
-                                      : const CircleAvatar(
-                                          backgroundImage: AssetImage(
-                                              'assets/images/user-avatar.png'),
-                                          radius: 45,
-                                        ),
+                                  Container(
+                                    width: 140,
+                                    height: 140,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 4,
+                                        color: Colors.white,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            spreadRadius: 3,
+                                            blurRadius: 10,
+                                            color:
+                                                Colors.white.withOpacity(0.1))
+                                      ],
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: currentUser['image'] != null
+                                            ? NetworkImage(currentUser['image'])
+                                            : const AssetImage(
+                                                    'assets/images/user-avatar.png')
+                                                as ImageProvider,
+                                      ),
+                                    ),
+                                  ),
                                   const SizedBox(
                                     height: 20,
                                   ),
