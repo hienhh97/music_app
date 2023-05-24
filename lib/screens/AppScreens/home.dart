@@ -5,7 +5,7 @@ import 'package:music_app/models/playlist.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
-import 'package:music_app/screens/common%20screens/song_screen.dart';
+import 'package:music_app/screens/CommonScreens/song_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/song.dart';

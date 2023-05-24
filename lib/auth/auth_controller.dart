@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:music_app/screens/common%20screens/playlist_screen.dart';
-import 'package:music_app/screens/common%20screens/song_screen.dart';
+import 'package:music_app/screens/CommonScreens/playlist_screen.dart';
+import 'package:music_app/screens/CommonScreens/song_screen.dart';
 import '../home.dart';
 import 'auth_scr.dart';
 
