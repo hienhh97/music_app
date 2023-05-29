@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:music_app/widgets/widgets.dart';
 import 'forgot_password.dart';
 
 const List<Color> _kDefaultRainbowColors = [
@@ -150,54 +151,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: 32,
                                 color: Colors.white),
                           ),
-
                           SizedBox(height: 15),
-
                           //welcome
                           Text(
                             "Welcome back again!",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                           SizedBox(height: 28),
-
                           //email textfiled
-                          TextField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(12)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(12)),
-                                prefixIcon: Icon(Icons.email_outlined),
-                                hintText: "Email",
-                                fillColor: Colors.white,
-                                filled: true,
-                              )),
+                          TextFormFieldCustom(
+                              input: 'Email',
+                              preIcon: Icons.email_outlined,
+                              textController: _emailController),
                           SizedBox(height: 12),
-
                           //password textfield
-                          TextField(
-                              controller: _passwordController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
-                                    borderRadius: BorderRadius.circular(12)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.purple),
-                                    borderRadius: BorderRadius.circular(12)),
-                                prefixIcon: Icon(Icons.lock_open_outlined),
-                                hintText: "Password",
-                                fillColor: Colors.white,
-                                filled: true,
-                              )),
-
+                          TextFormFieldObscureTextCustom(
+                            textController: _passwordController,
+                            input: 'Password',
+                          ),
                           SizedBox(height: 25),
-
                           //Sign button
                           GestureDetector(
                             onTap: signIn,

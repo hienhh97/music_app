@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:music_app/screens/AuthScreens/change_password.dart';
 import 'package:music_app/screens/CommonScreens/edit_acc_info.dart';
 import 'package:music_app/screens/CommonScreens/upload_new_song.dart';
 
@@ -124,7 +125,21 @@ class _AccountScreenState extends State<AccountScreen> {
                     },
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
+                  ),
+                  ProfileItem(
+                    icon: Icons.edit,
+                    title: 'Change password',
+                    onPress: () {
+                      Navigator.push(
+                          context,
+                          AnimatedPageRoute(
+                              child: ChangePassword(),
+                              direction: AxisDirection.left));
+                    },
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   ProfileItem(
                     icon: Icons.upload_rounded,
@@ -138,7 +153,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     },
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   ProfileItem(
                     icon: Icons.settings,
@@ -146,7 +161,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     onPress: () {},
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                 ],
               ),
@@ -224,35 +239,47 @@ class ProfileItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPress,
-      child: ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.grey[600]?.withOpacity(0.1),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.blueGrey[600],
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.blueGrey.shade100,
+                  blurRadius: 1,
+                  offset: Offset(0, 3),
+                  spreadRadius: 1)
+            ]),
+        child: ListTile(
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.grey[600]?.withOpacity(0.1),
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+            ),
           ),
-          child: Icon(
-            icon,
-            color: Colors.white,
+          title: Text(
+            title,
+            style: const TextStyle(
+                fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white),
           ),
-        ),
-        title: Text(
-          title,
-          style: const TextStyle(
-              fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white),
-        ),
-        trailing: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.grey.withOpacity(.1),
-          ),
-          child: const Icon(
-            Icons.arrow_forward_ios_rounded,
-            size: 18,
-            color: Colors.white,
+          trailing: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.grey.withOpacity(.1),
+            ),
+            child: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 18,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

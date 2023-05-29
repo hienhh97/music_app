@@ -2,7 +2,6 @@ class Playlist {
   final String id;
   final String title;
   final String imageUrl;
-  //final List<Song> songs;
   final List<String> songIDs;
 
   Playlist({

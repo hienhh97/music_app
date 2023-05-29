@@ -15,14 +15,6 @@ class Song {
     this.songUrl = '',
   });
 
-  Map<String, dynamic> toJson() => {
-        songName: 'songName',
-        singer: 'singer',
-        songAuthor: 'songAuthor',
-        imageUrl: 'imageUrl',
-        songUrl: 'songUrl',
-      };
-
   static Song fromJson(Map<String, dynamic> json) => Song(
         id: json['id'] as String? ?? '',
         songName: json['songName'] as String? ?? '',

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:music_app/widgets/widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   final VoidCallback showLoginScreen;
@@ -148,62 +149,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               const SizedBox(height: 25),
 
                               //first name textfiled
-                              TextFormField(
-                                controller: _firstNameController,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.purple),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: const Icon(Icons.abc),
-                                  hintText: "First name",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                ),
-                              ),
+                              TextFormFieldCustom(
+                                  textController: _firstNameController,
+                                  input: 'First name',
+                                  preIcon: Icons.abc),
+
                               const SizedBox(height: 12),
                               //last name textfiled
-                              TextFormField(
-                                controller: _lastNameController,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.purple),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: const Icon(Icons.abc),
-                                  hintText: "Last name",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                ),
-                              ),
+                              TextFormFieldCustom(
+                                  textController: _lastNameController,
+                                  input: 'Last name',
+                                  preIcon: Icons.abc),
+
                               const SizedBox(height: 12),
 
                               //age textfiled
-                              TextFormField(
-                                controller: _ageController,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.purple),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon:
-                                      const Icon(Icons.numbers_outlined),
-                                  hintText: "Enter your age",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                ),
+                              TextFormFieldCustom(
+                                textController: _ageController,
+                                input: 'Enter your age',
+                                preIcon: Icons.numbers_outlined,
                                 validator: (value) {
                                   if (value!.isEmpty ||
                                       !RegExp(r'^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]+$')
@@ -214,25 +178,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   }
                                 },
                               ),
+
                               const SizedBox(height: 12),
 
                               //email textfiled
-                              TextFormField(
-                                controller: _emailController,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.purple),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon: const Icon(Icons.email_outlined),
-                                  hintText: "Email",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                ),
+                              TextFormFieldCustom(
+                                textController: _emailController,
+                                input: 'Email',
+                                preIcon: Icons.email_outlined,
                                 validator: (value) {
                                   if (value!.isEmpty ||
                                       !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -244,53 +197,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 },
                               ),
                               const SizedBox(height: 12),
-
                               //password TextFormField
-                              TextFormField(
-                                controller: _passwordController,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.white),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.purple),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  prefixIcon:
-                                      const Icon(Icons.lock_open_outlined),
-                                  hintText: "Password",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                ),
-                              ),
+                              TextFormFieldObscureTextCustom(
+                                  textController: _passwordController,
+                                  input: 'Password'),
 
                               const SizedBox(
                                 height: 12,
                               ),
 
                               //confirm password TextFormField
-                              TextFormField(
-                                  controller: _confirmPasswordController,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.white),
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.purple),
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    prefixIcon:
-                                        const Icon(Icons.lock_open_outlined),
-                                    hintText: "Confirm Password",
-                                    fillColor: Colors.white,
-                                    filled: true,
-                                  )),
+                              TextFormFieldObscureTextCustom(
+                                  textController: _confirmPasswordController,
+                                  input: 'Confirm password'),
 
                               const SizedBox(height: 20),
 

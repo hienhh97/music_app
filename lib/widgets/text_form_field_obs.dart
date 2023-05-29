@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 
-class TextFormFieldCustom extends StatelessWidget {
-  TextFormFieldCustom({
+class TextFormFieldObscureTextCustom extends StatefulWidget {
+  const TextFormFieldObscureTextCustom({
     super.key,
     required this.textController,
     required this.input,
-    required this.preIcon,
-    this.validator,
   });
 
   final TextEditingController textController;
   final String input;
-  final IconData preIcon;
-  String? Function(String?)? validator;
 
+  @override
+  State<TextFormFieldObscureTextCustom> createState() =>
+      _TextFormFieldObscureTextCustomState();
+}
+
+class _TextFormFieldObscureTextCustomState
+    extends State<TextFormFieldObscureTextCustom> {
+  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       style: const TextStyle(color: Colors.white),
-      controller: textController,
-      validator: validator,
+      controller: widget.textController,
       decoration: InputDecoration(
           label: Text(
-            input,
+            widget.input,
             style: const TextStyle(color: Colors.white),
           ),
-          prefixIcon: Icon(
-            preIcon,
+          prefixIcon: const Icon(
+            Icons.lock_open_outlined,
             color: Colors.white,
           ),
           enabledBorder: OutlineInputBorder(
@@ -38,7 +41,19 @@ class TextFormFieldCustom extends StatelessWidget {
               color: Colors.redAccent,
             ),
           ),
+          suffixIcon: GestureDetector(
+            onTap: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            child: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.white,
+            ),
+          ),
           filled: true),
+      obscureText: _obscureText,
     );
   }
 }

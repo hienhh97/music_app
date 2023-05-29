@@ -7,25 +7,24 @@ class UserModel {
   final String lastName;
   final int age;
   final String email;
-  final String password;
   final String? image;
+  final List<String>? favSongs;
 
   const UserModel({
     this.uid,
     this.id,
     required this.age,
     required this.email,
-    required this.password,
     required this.firstName,
     required this.lastName,
     this.image,
+    this.favSongs,
   });
 
   toJson() {
     return {
       'firstname': firstName,
       'lastname': lastName,
-      'password': password,
       'age': age,
       'email': email,
       'image': image,
@@ -40,7 +39,6 @@ class UserModel {
       uid: data["uid"],
       firstName: data["firstname"],
       lastName: data["lastname"],
-      password: data["password"],
       age: data["age"],
       email: data["email"],
       image: data['image'],
