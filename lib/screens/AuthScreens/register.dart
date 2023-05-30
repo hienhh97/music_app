@@ -50,7 +50,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             'lastname': _lastNameController.text.trim(),
             'email': _emailController.text.trim(),
             'age': int.parse(_ageController.text.trim()),
-            'password': _passwordController.text.trim(),
             'image': null,
           });
         });

@@ -8,7 +8,7 @@ A simple Music player project, that using:
 - [Getx](https://pub.dev/packages/get) (screens route)
 
 ## NOTE:
-Recently, someone is trying to use my code without permission, so I have hidden some files. If you want full source code version, contact me by email and don't forget to leave a star.
+THIS IS A PART OF ALL SOURCES CODE
 
 ## Any question? Contact with email: huahienchtq97@gmail.com
 
