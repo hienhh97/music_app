@@ -100,6 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               return const Text('loading!');
                             }
                             final songs = snapshot.data!;
+                            songProvider.allSongs = songs;
                             return Column(
                               children: [
                                 const SizedBox(

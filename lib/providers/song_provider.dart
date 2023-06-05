@@ -21,6 +21,15 @@ class SongProvider with ChangeNotifier {
   final List<int> _playedIndexes = [];
   PlayerState state = PlayerState.STOPPED;
 
+  List<Song> _allSongs = [];
+  List<Song> get allSongs => _allSongs;
+  set allSongs(List<Song> songs) {
+    _allSongs = songs;
+    ChangeNotifier();
+  }
+
+  Song getByID(String id) => _allSongs.firstWhere((song) => song.id == id);
+
   Song? get currentSong {
     audioPlayer.onPlayerCompletion;
     if (_currentIndex == -1) {

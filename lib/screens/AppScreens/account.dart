@@ -90,7 +90,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                     height: 20,
                                   ),
                                   Text(
-                                    "${currentUser['firstname']} ${currentUser["lastname"]}",
+                                    "${currentUser['firstName']} ${currentUser["lastName"]}",
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 36,
