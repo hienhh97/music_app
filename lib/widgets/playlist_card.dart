@@ -24,7 +24,7 @@ class PlaylistCard extends StatelessWidget {
         Navigator.push(
             context,
             AnimatedPageRoute(
-                child: const PlaylistScreen(), direction: AxisDirection.left));
+                child: PlaylistScreen(), direction: AxisDirection.left));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),

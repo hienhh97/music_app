@@ -12,7 +12,6 @@ class FavProvider with ChangeNotifier {
   List<String> get favoriteListSongIDs => _favoriteListSongIDs;
 
   set favoriteListSongIDs(List<String> songs) {
-    // _favorite.clear();
     _favoriteListSongIDs = songs;
   }
 

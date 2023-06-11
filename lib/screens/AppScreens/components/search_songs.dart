@@ -4,15 +4,15 @@ import 'package:music_app/models/song.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key, required this.songs});
+class SearchSongScreen extends StatefulWidget {
+  const SearchSongScreen({super.key, required this.songs});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<SearchSongScreen> createState() => _SearchSongScreenState();
   final List<Song> songs;
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchSongScreenState extends State<SearchSongScreen> {
   List<Song> _foundedSongs = [];
 
   @override
@@ -40,6 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
         title: SizedBox(
           height: 38,
           child: TextField(
+            style: const TextStyle(color: Colors.white),
             onChanged: (value) => onSearch(value),
             decoration: InputDecoration(
                 filled: true,

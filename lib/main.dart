@@ -5,7 +5,6 @@ import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
-import 'package:music_app/providers/user_details_provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'auth/auth_controller.dart';

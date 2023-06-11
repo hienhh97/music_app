@@ -53,7 +53,7 @@ class UserModel {
         email: json['email'] as String? ?? '',
         image: json['image'] as String? ?? '',
         age: json['age'] as int? ?? 0,
-        favSongs: (json['favSongs'] as List<dynamic>)
+        favSongs: ((json['favSongs'] ?? []) as List<dynamic>)
             .map((e) => e as String)
             .toList(),
       );

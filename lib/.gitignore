@@ -1,4 +1,3 @@
 screens/CommonScreens
-gitignore
-android/app/google-services.json
-lib/firebase_options.dart
+.gitignore
+firebase_options.dart

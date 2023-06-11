@@ -247,7 +247,7 @@ class ProfileItem extends StatelessWidget {
               BoxShadow(
                   color: Colors.blueGrey.shade100,
                   blurRadius: 1,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                   spreadRadius: 1)
             ]),
         child: ListTile(

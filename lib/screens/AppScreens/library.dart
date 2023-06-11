@@ -20,7 +20,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         child: Scaffold(
           backgroundColor: Colors.indigo,
           appBar: AppBar(
-            title: Text('Library'),
+            title: const Text('Library'),
             backgroundColor: Colors.deepPurple,
           ),
           body: Column(

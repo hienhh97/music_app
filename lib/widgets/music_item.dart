@@ -5,10 +5,11 @@ import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
+import 'package:music_app/widgets/add_to_playlist.dart';
 import '../models/song.dart';
 
 class MusicItem extends StatelessWidget {
-  const MusicItem({
+  MusicItem({
     super.key,
     required this.song,
     required this.favProvider,
@@ -18,6 +19,7 @@ class MusicItem extends StatelessWidget {
     required this.songs,
     required this.playlist,
     required this.playlistsProvider,
+    required this.scaffoldMessengerKey,
   });
   final int index;
   final Song song;
@@ -27,6 +29,8 @@ class MusicItem extends StatelessWidget {
   final SongProvider songProvider;
   final RecentProvider recentProvider;
   final PlaylistsProvider playlistsProvider;
+  GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +111,12 @@ class MusicItem extends StatelessWidget {
                         color: Colors.white,
                       )),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  addToPlaylist(
+                      context, playlistsProvider, scaffoldMessengerKey);
+                },
                 icon: const Icon(
-                  Icons.more_vert_rounded,
+                  Icons.add,
                   color: Colors.white,
                 )),
           ],

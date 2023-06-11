@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/song.dart';
 import '../../widgets/widgets.dart';
-import 'components/custom_search.dart';
+import 'components/search_songs.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -121,8 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.push(
                                             context,
                                             AnimatedPageRoute(
-                                                child:
-                                                    SearchScreen(songs: songs),
+                                                child: SearchSongScreen(
+                                                    songs: songs),
                                                 direction: AxisDirection.left));
                                       },
                                       icon: const Icon(
@@ -272,6 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               return const Text('loading!');
                             } else if (snapshot.hasData) {
                               var playlists = snapshot.data!;
+                              playlistsProvider.allPlaylists = playlists;
                               return ListView.builder(
                                 padding: const EdgeInsets.only(top: 20),
                                 physics: const NeverScrollableScrollPhysics(),
