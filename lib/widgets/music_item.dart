@@ -119,6 +119,14 @@ class MusicItem extends StatelessWidget {
                   Icons.add,
                   color: Colors.white,
                 )),
+            IconButton(
+                onPressed: () {
+                  if (playlistsProvider.removeSongFromPlaylist(
+                          playlist, song, context) ==
+                      true) {}
+                  ;
+                },
+                icon: Icon(Icons.delete))
           ],
         ),
       ),

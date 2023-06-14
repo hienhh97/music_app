@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/models/playlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,17 +52,56 @@ class PlaylistsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> createNewPlaylist(
-      String playlistName, Song? firstSong, dynamic context) async {
+  Future<void> removeSongFromPlaylist(
+      Playlist playlist, Song song, dynamic context) async {
+    final listIDs = playlist.songIDs;
+
+    if (isSongofPlaylist(playlist, song)) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text("Warning!"),
+                content: const Text("REMOVE this song from playlist?"),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        listIDs.remove(song.id);
+
+                        _firestore
+                            .collection('playlists')
+                            .doc(playlist.id)
+                            .update({"songIDs": listIDs});
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Yes')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('No')),
+                ],
+              ));
+    }
+  }
+
+  Future<void> createNewPlaylist(String playlistName, Song? firstSong) async {
     final docPlaylist = _firestore.collection('playlists').doc();
+    final currentUser = FirebaseAuth.instance.currentUser;
     final playlist = Playlist(
       id: docPlaylist.id,
       imageUrl: firstSong!.imageUrl,
-      songIDs: [firstSong.id],
+      songIDs: firstSong.id != '' ? [firstSong.id] : [],
       title: playlistName,
+      createdBy: currentUser!.uid,
     );
     final json = playlist.toJson();
     await docPlaylist.set(json);
+  }
+
+  Future<void> removeMyPlaylist(Playlist playlist) async {
+    final selectedPlaylist =
+        _firestore.collection('playlists').doc(playlist.id);
+    selectedPlaylist.delete();
   }
 
   isSongofPlaylist(Playlist playlist, Song song) {

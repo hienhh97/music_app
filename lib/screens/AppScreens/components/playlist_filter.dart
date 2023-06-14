@@ -5,9 +5,9 @@ import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaylistsFilter extends StatefulWidget {
-  GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
   PlaylistsFilter(
       {super.key, required this.playlists, required this.scaffoldMessengerKey});
+  GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
   @override
   State<PlaylistsFilter> createState() => _PlaylistsFilterState();
@@ -141,8 +141,7 @@ class _PlaylistsFilterState extends State<PlaylistsFilter> {
                                                 .createNewPlaylist(
                                                     _playlistController.text
                                                         .trim(),
-                                                    songProvider.currentSong!,
-                                                    context)
+                                                    songProvider.currentSong!)
                                                 .whenComplete(() => widget
                                                     .scaffoldMessengerKey
                                                     .currentState!
@@ -163,36 +162,42 @@ class _PlaylistsFilterState extends State<PlaylistsFilter> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.shade700,
-                                  borderRadius: BorderRadius.circular(10)),
-                            ),
-                            const Positioned(
-                                right: 5,
-                                top: 5,
-                                child: Icon(
-                                  Icons.add,
-                                  size: 40,
-                                  color: Colors.white,
-                                )),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        const Expanded(
-                            child: Text(
-                          'Create a new playlist',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ))
-                      ],
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      height: 75,
+                      decoration: const BoxDecoration(color: Colors.red),
+                      child: Row(
+                        children: [
+                          Stack(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade700,
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              const Positioned(
+                                  right: 5,
+                                  top: 5,
+                                  child: Icon(
+                                    Icons.add,
+                                    size: 40,
+                                    color: Colors.white,
+                                  )),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          const Expanded(
+                              child: Text(
+                            'Create a new playlist',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -235,12 +240,22 @@ class _PlaylistsFilterState extends State<PlaylistsFilter> {
                                           ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(12.0),
-                                            child: Image.network(
-                                              _foundedPlaylists[index].imageUrl,
-                                              height: 50,
-                                              width: 50,
-                                              fit: BoxFit.cover,
-                                            ),
+                                            child: _foundedPlaylists[index]
+                                                        .imageUrl !=
+                                                    ''
+                                                ? Image.network(
+                                                    _foundedPlaylists[index]
+                                                        .imageUrl,
+                                                    height: 50,
+                                                    width: 50,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    'assets/images/no-image-album.jpg',
+                                                    height: 50,
+                                                    width: 50,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                           ),
                                           const SizedBox(
                                             width: 20,
@@ -289,51 +304,6 @@ class _PlaylistsFilterState extends State<PlaylistsFilter> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  playlistDetails({required Playlist playlist}) {
-    return GestureDetector(
-      onTap: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                width: 60,
-                height: 60,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(playlist.imageUrl),
-                    )),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    playlist.title,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    playlist.id,
-                    style: TextStyle(color: Colors.grey[500]),
-                  )
-                ],
-              )
-            ],
-          )
-        ],
       ),
     );
   }

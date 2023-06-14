@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
           snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());
 
   Future<List<Playlist>> getPlaylists() async {
-    var ref = FirebaseFirestore.instance.collection('playlists');
+    var ref = FirebaseFirestore.instance
+        .collection('playlists')
+        .where('createdBy', isEqualTo: 'admin');
     var snapshot = await ref.get();
     var data = snapshot.docs.map((i) => i.data());
     var playlists = data.map((e) => Playlist.fromJson(e));
@@ -272,7 +274,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               return const Text('loading!');
                             } else if (snapshot.hasData) {
                               var playlists = snapshot.data!;
-                              playlistsProvider.allPlaylists = playlists;
                               return ListView.builder(
                                 padding: const EdgeInsets.only(top: 20),
                                 physics: const NeverScrollableScrollPhysics(),

@@ -24,60 +24,63 @@ class PlaylistCard extends StatelessWidget {
         Navigator.push(
             context,
             AnimatedPageRoute(
-                child: PlaylistScreen(), direction: AxisDirection.left));
+                child: const PlaylistScreen(), direction: AxisDirection.left));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.only(left: 20),
         decoration: BoxDecoration(
-            color: Colors.deepOrange.shade100.withOpacity(0.6),
-            borderRadius: BorderRadius.circular(15)),
+            color: Colors.indigo[300], borderRadius: BorderRadius.circular(15)),
         height: 75,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: Image.network(
-                playlist.imageUrl,
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    playlist.title,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                  ),
-                  Text(
-                    '${playlist.songIDs.length} songs',
-                    maxLines: 2,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(fontSize: 14),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: playlist.imageUrl != ''
+                ? Image.network(
+                    playlist.imageUrl,
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
                   )
-                ],
-              ),
+                : Image.asset(
+                    'assets/images/no-image-album.jpg',
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.cover,
+                  ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  playlist.title,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                ),
+                Text(
+                  '${playlist.songIDs.length} songs',
+                  maxLines: 2,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 14),
+                )
+              ],
             ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.play_circle),
-              color: Colors.white,
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.play_circle),
+            color: Colors.white,
+          ),
+        ]),
       ),
     );
   }

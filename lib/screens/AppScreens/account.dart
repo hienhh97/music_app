@@ -141,33 +141,11 @@ class _AccountScreenState extends State<AccountScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  ProfileItem(
-                    icon: Icons.upload_rounded,
-                    title: 'Upload new song',
-                    onPress: () {
-                      Navigator.push(
-                          context,
-                          AnimatedPageRoute(
-                              child: const UploadNewSong(),
-                              direction: AxisDirection.left));
-                    },
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  ProfileItem(
-                    icon: Icons.settings,
-                    title: 'Action(Inprogress)',
-                    onPress: () {},
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
                 ],
               ),
 
               const SizedBox(
-                height: 90,
+                height: 40,
               ),
 
               //sign out button
@@ -245,10 +223,11 @@ class ProfileItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                  color: Colors.blueGrey.shade100,
+                  color: Colors.white,
                   blurRadius: 1,
-                  offset: const Offset(0, 3),
-                  spreadRadius: 1)
+                  offset: const Offset(1, 2),
+                  blurStyle: BlurStyle.inner,
+                  spreadRadius: 0.5)
             ]),
         child: ListTile(
           leading: Container(

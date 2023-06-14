@@ -11,14 +11,14 @@ import 'package:music_app/providers/store.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/widgets.dart';
 
-class AllFavSongs extends StatefulWidget {
-  const AllFavSongs({super.key});
+class MyFavSongs extends StatefulWidget {
+  const MyFavSongs({super.key});
 
   @override
-  State<AllFavSongs> createState() => _AllFavSongsState();
+  State<MyFavSongs> createState() => _MyFavSongsState();
 }
 
-class _AllFavSongsState extends State<AllFavSongs> {
+class _MyFavSongsState extends State<MyFavSongs> {
   late Stream<UserModel> readUser;
   final currentUser = FirebaseAuth.instance.currentUser!;
   GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -45,36 +45,45 @@ class _AllFavSongsState extends State<AllFavSongs> {
     RecentProvider recentProvider = Provider.of<RecentProvider>(context);
     FavProvider favProvider = Provider.of<FavProvider>(context);
 
-    return MaterialApp(
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      home: Scaffold(
-        backgroundColor: Colors.lightBlue,
-        body: StreamBuilder<UserModel>(
-          stream: readUser,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('loading!');
-            }
-            final currUser = snapshot.data!;
-            Store.instance.currentUser = currUser;
-            favProvider.favoriteListSongIDs = currUser.favSongs;
-            for (var songID in favProvider.favoriteListSongIDs) {
-              if (favProvider.songs.length <
-                  favProvider.favoriteListSongIDs.length) {
-                favProvider.songs.add(songProvider.getByID(songID));
-              }
-            }
+    return StreamBuilder<UserModel>(
+      stream: readUser,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text('loading!');
+        }
+        final currUser = snapshot.data!;
+        Store.instance.currentUser = currUser;
+        favProvider.favoriteListSongIDs = currUser.favSongs;
+        for (var songID in favProvider.favoriteListSongIDs) {
+          if (favProvider.songs.length <
+              favProvider.favoriteListSongIDs.length) {
+            favProvider.songs.add(songProvider.getByID(songID));
+          }
+        }
 
-            final allSongsPlaylist = Playlist(
-                id: 'library',
-                imageUrl:
-                    'https://icon-library.com/images/music-icon-transparent/music-icon-transparent-8.jpg',
-                songIDs: currUser.favSongs,
-                title: 'MY FAVOURITE SONGS');
+        final allSongsPlaylist = Playlist(
+            id: 'library',
+            imageUrl:
+                'https://icon-library.com/images/music-icon-transparent/music-icon-transparent-8.jpg',
+            songIDs: currUser.favSongs,
+            title: 'MY FAVOURITE SONGS');
 
-            return SingleChildScrollView(
+        return MaterialApp(
+          scaffoldMessengerKey: scaffoldMessengerKey,
+          home: Scaffold(
+            backgroundColor: Colors.lightBlue[500],
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: const Text('MY FAVOURITE SONGS'),
+            ),
+            body: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(
@@ -138,10 +147,10 @@ class _AllFavSongsState extends State<AllFavSongs> {
                   )
                 ],
               ),
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
