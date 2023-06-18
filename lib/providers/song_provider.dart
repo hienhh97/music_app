@@ -5,6 +5,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/models/song.dart';
 
+import '../models/playlist.dart';
+
 enum RepeatMode { off, one, all }
 
 class SongProvider with ChangeNotifier {
@@ -29,6 +31,14 @@ class SongProvider with ChangeNotifier {
   }
 
   Song getByID(String id) => _allSongs.firstWhere((song) => song.id == id);
+  List<Song> getListSong(Playlist playlist) {
+    List<Song> songs = [];
+    for (var songID in playlist.songIDs) {
+      songs.add(getByID(songID));
+    }
+    {}
+    return songs;
+  }
 
   Song? get currentSong {
     audioPlayer.onPlayerCompletion;

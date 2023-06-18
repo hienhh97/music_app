@@ -166,7 +166,11 @@ class _PlaylistsFilterState extends State<PlaylistsFilter> {
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       height: 75,
-                      decoration: const BoxDecoration(color: Colors.red),
+                      decoration: BoxDecoration(
+                          color: Colors.deepPurple[300],
+                          borderRadius: const BorderRadius.vertical(
+                              bottom: Radius.circular(15),
+                              top: Radius.circular(5))),
                       child: Row(
                         children: [
                           Stack(

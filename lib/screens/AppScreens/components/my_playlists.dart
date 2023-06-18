@@ -5,7 +5,6 @@ import 'package:music_app/models/song.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/store.dart';
 import 'package:provider/provider.dart';
-
 import '../../../widgets/widgets.dart';
 
 class MyPlaylists extends StatefulWidget {
@@ -61,6 +60,7 @@ class _MyPlaylistsState extends State<MyPlaylists> {
               'My playlists',
               style: TextStyle(fontSize: 22),
             ),
+            backgroundColor: Color.fromARGB(255, 43, 16, 99),
           ),
 
           //add new playlist button
@@ -75,7 +75,7 @@ class _MyPlaylistsState extends State<MyPlaylists> {
               size: 40,
             ),
           ),
-          backgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: const Color.fromARGB(255, 18, 5, 47),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: StreamBuilder<List<Playlist>>(
@@ -97,7 +97,7 @@ class _MyPlaylistsState extends State<MyPlaylists> {
                         initialItemCount: playlistsProvider.allPlaylists.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index, animation) {
-                          return MyPlaylistCard(
+                          return PlaylistCard(
                             playlist: playlistsProvider.allPlaylists[index],
                             animation: animation,
                             onClicked: () {
@@ -211,7 +211,7 @@ class _MyPlaylistsState extends State<MyPlaylists> {
                       playlistsProvider.removeMyPlaylist(playlist).whenComplete(
                           () => _listKey.currentState!.removeItem(
                               index,
-                              (context, animation) => MyPlaylistCard(
+                              (context, animation) => PlaylistCard(
                                   playlist: removedPlaylist,
                                   animation: animation,
                                   onClicked: () {})));

@@ -69,6 +69,39 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: const Color(0xFF1F1A30),
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.black87,
+          elevation: 0,
+          shape: const RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.vertical(bottom: Radius.elliptical(140, 10))),
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.workspaces_filled),
+            color: Colors.white,
+          ),
+          actions: [
+            //search Icon
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    AnimatedPageRoute(
+                        child: SearchSongScreen(
+                          songs: songProvider.allSongs,
+                          isSetSongToPlaylist: false,
+                        ),
+                        direction: AxisDirection.left));
+              },
+              icon: const Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              splashColor: Colors.grey[400],
+            ),
+          ],
+        ),
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -90,53 +123,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Column(
                     children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: StreamBuilder<List<Song>>(
-                          stream: readSongs,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) {
-                              return const Text('something went wrong!');
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Text('loading!');
-                            }
-                            final songs = snapshot.data!;
-                            songProvider.allSongs = songs;
-                            return Column(
+                      StreamBuilder<List<Song>>(
+                        stream: readSongs,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return const Text('something went wrong!');
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text('loading!');
+                          }
+                          final songs = snapshot.data!;
+                          songProvider.allSongs = songs;
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: Column(
                               children: [
                                 const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.workspaces_filled),
-                                      color: Colors.white,
-                                    ),
-                                    //search Icon
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            AnimatedPageRoute(
-                                                child: SearchSongScreen(
-                                                    songs: songs),
-                                                direction: AxisDirection.left));
-                                      },
-                                      icon: const Icon(
-                                        Icons.search,
-                                        color: Colors.white,
-                                      ),
-                                      splashColor: Colors.grey[400],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 30,
+                                  height: 80,
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.only(right: 20),
@@ -156,16 +159,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         aspectRatio: 2,
                                         onPageChanged: (index, reason) {},
                                         enlargeCenterPage: true,
-                                        enlargeFactor: .3,
+                                        enlargeFactor: 0.3,
                                         height: 260,
                                         autoPlay: true,
                                         autoPlayAnimationDuration:
                                             const Duration(
                                                 milliseconds: 2400))),
                               ],
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -274,14 +277,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               return const Text('loading!');
                             } else if (snapshot.hasData) {
                               var playlists = snapshot.data!;
-                              return ListView.builder(
+                              return AnimatedList(
                                 padding: const EdgeInsets.only(top: 20),
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: playlists.length,
-                                itemBuilder: (context, index) {
+                                initialItemCount: playlists.length,
+                                itemBuilder: (context, index, animation) {
                                   return PlaylistCard(
-                                      playlist: playlists[index]);
+                                    playlist: playlists[index],
+                                    animation: animation,
+                                    onClicked: () {},
+                                  );
                                 },
                               );
                             } else {

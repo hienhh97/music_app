@@ -25,7 +25,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -44,13 +43,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 email: _emailController.text.trim(),
                 password: _passwordController.text.trim())
             .then((value) {
-          FirebaseFirestore.instance.collection('users').doc().set({
+          final docUser = FirebaseFirestore.instance.collection('users').doc();
+          docUser.set({
+            'id': docUser.id,
             "uid": value.user!.uid,
-            'firstname': _firstNameController.text.trim(),
-            'lastname': _lastNameController.text.trim(),
+            'firstName': _firstNameController.text.trim(),
+            'lastName': _lastNameController.text.trim(),
             'email': _emailController.text.trim(),
             'age': int.parse(_ageController.text.trim()),
             'image': null,
+            'favSongs': [],
           });
         });
       } on FirebaseAuthException catch (e) {
@@ -167,6 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 textController: _ageController,
                                 input: 'Enter your age',
                                 preIcon: Icons.numbers_outlined,
+                                keyboardType: TextInputType.number,
                                 validator: (value) {
                                   if (value!.isEmpty ||
                                       !RegExp(r'^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]+$')

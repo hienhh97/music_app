@@ -23,8 +23,8 @@ class UserModel {
 
   toJson() {
     return {
-      'firstname': firstName,
-      'lastname': lastName,
+      'firstName': firstName,
+      'lastName': lastName,
       'age': age,
       'email': email,
       'image': image,

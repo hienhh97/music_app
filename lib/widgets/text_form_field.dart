@@ -7,12 +7,14 @@ class TextFormFieldCustom extends StatelessWidget {
     required this.input,
     required this.preIcon,
     this.validator,
+    this.keyboardType,
   });
 
   final TextEditingController textController;
   final String input;
   final IconData preIcon;
   String? Function(String?)? validator;
+  TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,7 @@ class TextFormFieldCustom extends StatelessWidget {
       style: const TextStyle(color: Colors.white),
       controller: textController,
       validator: validator,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
           label: Text(
             input,

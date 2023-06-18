@@ -52,35 +52,15 @@ class PlaylistsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> removeSongFromPlaylist(
-      Playlist playlist, Song song, dynamic context) async {
+  Future<void> removeSongFromPlaylist(Playlist playlist, Song song) async {
     final listIDs = playlist.songIDs;
-
     if (isSongofPlaylist(playlist, song)) {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                title: const Text("Warning!"),
-                content: const Text("REMOVE this song from playlist?"),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        listIDs.remove(song.id);
+      listIDs.remove(song.id);
 
-                        _firestore
-                            .collection('playlists')
-                            .doc(playlist.id)
-                            .update({"songIDs": listIDs});
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Yes')),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('No')),
-                ],
-              ));
+      _firestore
+          .collection('playlists')
+          .doc(playlist.id)
+          .update({"songIDs": listIDs});
     }
   }
 

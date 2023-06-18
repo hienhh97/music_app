@@ -1,11 +1,10 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:music_app/providers/store.dart';
 import 'package:music_app/screens/AuthScreens/change_password.dart';
 import 'package:music_app/screens/CommonScreens/edit_acc_info.dart';
-import 'package:music_app/screens/CommonScreens/upload_new_song.dart';
 
 import '../../widgets/widgets.dart';
 
@@ -17,7 +16,7 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final user = Store.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -39,79 +38,59 @@ class _AccountScreenState extends State<AccountScreen> {
             children: [
               Column(
                 children: [
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .where("uid", isEqualTo: user.uid)
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, i) {
-                            final currentUser = snapshot.data!.docs[i];
-                            return Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Container(
-                                    width: 140,
-                                    height: 140,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 4,
-                                        color: Colors.white,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            spreadRadius: 3,
-                                            blurRadius: 10,
-                                            color:
-                                                Colors.white.withOpacity(0.1))
-                                      ],
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: currentUser['image'] != null
-                                            ? NetworkImage(currentUser['image'])
-                                            : const AssetImage(
-                                                    'assets/images/user-avatar.png')
-                                                as ImageProvider,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    "${currentUser['firstName']} ${currentUser["lastName"]}",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  Text(
-                                    currentUser['email'],
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                  const SizedBox(
-                                    height: 50,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      }
-                      return Container();
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: 140,
+                          height: 140,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 4,
+                              color: Colors.white,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  spreadRadius: 3,
+                                  blurRadius: 10,
+                                  color: Colors.white.withOpacity(0.1))
+                            ],
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: user.image != null
+                                  ? NetworkImage(user.image!)
+                                  : const AssetImage(
+                                          'assets/images/user-avatar.png')
+                                      as ImageProvider,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "${user.firstName} ${user.lastName}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        Text(
+                          user.email,
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 20),
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                      ],
+                    ),
                   ),
                   ProfileItem(
                     icon: Icons.edit,
@@ -151,24 +130,48 @@ class _AccountScreenState extends State<AccountScreen> {
               //sign out button
               GestureDetector(
                 onTap: () {
-                  AwesomeDialog(
-                    context: context,
-                    dialogType: DialogType.question,
-                    headerAnimationLoop: false,
-                    animType: AnimType.bottomSlide,
-                    showCloseIcon: true,
-                    closeIcon: const Icon(Icons.close_fullscreen_outlined),
-                    title: 'Do you wanna sign out?',
-                    btnOkOnPress: () {
-                      FirebaseAuth.instance.signOut();
-                    },
-                    btnCancelOnPress: () {},
-                    onDismissCallback: (type) {
-                      debugPrint('Dialog Dismiss from callback $type');
-                    },
-                  ).show();
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            backgroundColor: Colors.black87,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            title: const Center(child: Text('WARNING!')),
+                            titleTextStyle: TextStyle(
+                                color: Colors.red[700],
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                            content: const Text('Do you wanna sign out?'),
+                            contentTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    FirebaseAuth.instance.signOut();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    'Yes',
+                                    style: TextStyle(
+                                        color: Colors.blue[200], fontSize: 16),
+                                  )),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'No',
+                                    style: TextStyle(
+                                        color: Colors.white54, fontSize: 16),
+                                  )),
+                            ],
+                          ));
                 },
                 child: Container(
+                  height: 60,
+                  width: 200,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                       color: Colors.deepOrange[800],
@@ -192,6 +195,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     ],
                   )),
                 ),
+              ),
+              const SizedBox(
+                height: 20,
               ),
             ],
           ),
