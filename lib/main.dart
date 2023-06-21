@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:music_app/providers/fav_provider.dart';
+import 'package:music_app/providers/notification_provider.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PlaylistsProvider()),
+        ChangeNotifierProvider(create: (context) => NotificationProvider()),
         ChangeNotifierProvider(create: (context) => SongProvider()),
         ChangeNotifierProvider(create: (context) => FavProvider()),
         ChangeNotifierProvider(create: (context) => RecentProvider()),

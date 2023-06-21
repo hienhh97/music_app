@@ -8,11 +8,13 @@ class TextFormFieldCustom extends StatelessWidget {
     required this.preIcon,
     this.validator,
     this.keyboardType,
+    this.errText,
   });
 
   final TextEditingController textController;
   final String input;
   final IconData preIcon;
+  String? errText;
   String? Function(String?)? validator;
   TextInputType? keyboardType;
 
@@ -24,6 +26,7 @@ class TextFormFieldCustom extends StatelessWidget {
       validator: validator,
       keyboardType: keyboardType,
       decoration: InputDecoration(
+          errorText: errText,
           label: Text(
             input,
             style: const TextStyle(color: Colors.white),

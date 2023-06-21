@@ -31,6 +31,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).single);
+
   @override
   void initState() {
     readUser = getUser();

@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:music_app/providers/store.dart';
 import 'package:music_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
+
+import '../../api/notification_api.dart';
+import '../../providers/notification_provider.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -11,56 +16,57 @@ class ChangePassword extends StatefulWidget {
 
 class _ChangePasswordState extends State<ChangePassword> {
   final password = TextEditingController();
-
   final newPassword = TextEditingController();
-
   final newPasswordConfirm = TextEditingController();
-
   final currUser = FirebaseAuth.instance.currentUser;
 
   bool correctlyPassword = false;
   String errPasswordMessage = '';
   String errNewPasswordMessage = '';
 
-  changePassword(String myPassword, String newPassword) async {
-    if (newPasswordConfirmed()) {
-      var cred = EmailAuthProvider.credential(
-          email: currUser!.email!, password: myPassword);
+  final String ntfTitle = 'Changed password';
+  final String ntfBody = 'Change password successfully!';
 
-      await currUser!
-          .reauthenticateWithCredential(cred)
-          .then((value) => currUser!.updatePassword(newPassword))
-          .whenComplete(() {
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  content: const Text('Your password has updated!'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('OK'))
-                  ],
-                ));
-        Navigator.of(context).pop();
-      });
-    } else {
-      showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                content: const Text(
-                    'New Password Confirm must be the same as New Password!'),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('OK'))
-                ],
-              ));
-      Navigator.of(context).pop();
-    }
+  Future<void> changePassword(String myPassword, String newPassword) async {
+    var cred = EmailAuthProvider.credential(
+        email: currUser!.email!, password: myPassword);
+
+    await currUser!
+        .reauthenticateWithCredential(cred)
+        .then((value) => currUser!.updatePassword(newPassword));
+  }
+
+  void successDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: const Text('Your password has updated!'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'))
+              ],
+            ));
+    Navigator.of(context).pop();
+  }
+
+  void failureDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: const Text(
+                  'New Password Confirm must be the same as New Password!'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'))
+              ],
+            ));
+    Navigator.of(context).pop();
   }
 
   enterPassword(String myPassword) async {
@@ -78,6 +84,8 @@ class _ChangePasswordState extends State<ChangePassword> {
     });
   }
 
+  final currUserData = Store.instance.currentUser;
+
   bool newPasswordConfirmed() {
     if (newPassword.text.trim() == newPasswordConfirm.text.trim()) {
       return true;
@@ -88,6 +96,9 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   Widget build(BuildContext context) {
+    NotificationProvider notificationProvider =
+        Provider.of<NotificationProvider>(context);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -140,7 +151,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           ),
                           TextFormFieldObscureTextCustom(
                               textController: password,
-                              input: 'Enter your correct password'),
+                              input: 'Enter your current password'),
                           const SizedBox(
                             height: 3,
                           ),
@@ -176,7 +187,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       secondChild: Column(
                         children: [
                           Text(
-                            'Now enter your new password!',
+                            'Correctly password! Now enter your new password!',
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.yellow[700],
@@ -199,7 +210,15 @@ class _ChangePasswordState extends State<ChangePassword> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              changePassword(password.text, newPassword.text);
+                              if (newPasswordConfirmed()) {
+                                changePassword(password.text, newPassword.text)
+                                    .whenComplete(() {
+                                  successDialog();
+                                  sendNotifi();
+                                  notificationProvider.sendNtfToFirestore(
+                                      ntfTitle, currUserData.id!, ntfBody);
+                                });
+                              }
                             },
                             child: Container(
                               padding: const EdgeInsets.all(20),
@@ -222,7 +241,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                       crossFadeState: correctlyPassword
                           ? CrossFadeState.showSecond
                           : CrossFadeState.showFirst,
-                      duration: Duration(milliseconds: 400)),
+                      duration: const Duration(milliseconds: 400)),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -246,6 +265,13 @@ class _ChangePasswordState extends State<ChangePassword> {
           ),
         ),
       ),
+    );
+  }
+
+  void sendNotifi() {
+    NotificationAPI.showNotification(
+      title: ntfTitle,
+      body: ntfBody,
     );
   }
 }

@@ -8,7 +8,6 @@ import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/playlists_provider.dart';
 import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
-import 'package:music_app/providers/store.dart';
 import 'package:provider/provider.dart';
 import '../../../models/song.dart';
 import '../../../widgets/widgets.dart';
@@ -44,7 +43,6 @@ class _MyFavSongsState extends State<MyFavSongs> {
     SongProvider songProvider = Provider.of<SongProvider>(context);
     PlaylistsProvider playlistsProvider =
         Provider.of<PlaylistsProvider>(context);
-    RecentProvider recentProvider = Provider.of<RecentProvider>(context);
     FavProvider favProvider = Provider.of<FavProvider>(context);
 
     return StreamBuilder<UserModel>(
@@ -56,7 +54,6 @@ class _MyFavSongsState extends State<MyFavSongs> {
           return const Text('loading!');
         }
         final currUser = snapshot.data!;
-        Store.instance.currentUser = currUser;
         favProvider.favoriteListSongIDs = currUser.favSongs;
         for (var songID in favProvider.favoriteListSongIDs) {
           if (favProvider.songs.length <

@@ -1,4 +1,4 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +6,7 @@ import 'package:music_app/providers/store.dart';
 import 'package:music_app/screens/AuthScreens/change_password.dart';
 import 'package:music_app/screens/CommonScreens/edit_acc_info.dart';
 
+import '../../models/account.dart';
 import '../../widgets/widgets.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -16,7 +17,21 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  final user = Store.instance.currentUser;
+  late Stream<UserModel> readUser;
+  final currentUser = FirebaseAuth.instance.currentUser!;
+
+  Stream<UserModel> getUser() => FirebaseFirestore.instance
+      .collection('users')
+      .where('uid', isEqualTo: currentUser.uid)
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => UserModel.fromJson(doc.data())).single);
+
+  @override
+  void initState() {
+    readUser = getUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,59 +54,73 @@ class _AccountScreenState extends State<AccountScreen> {
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: 140,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 4,
-                              color: Colors.white,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                  spreadRadius: 3,
-                                  blurRadius: 10,
-                                  color: Colors.white.withOpacity(0.1))
+                      padding: const EdgeInsets.all(12.0),
+                      child: StreamBuilder(
+                        stream: readUser,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          } else if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Text('loading!');
+                          }
+                          final user = snapshot.data!;
+                          Store.instance.currentUser = user;
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                width: 140,
+                                height: 140,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Colors.white,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        spreadRadius: 3,
+                                        blurRadius: 10,
+                                        color: Colors.white.withOpacity(0.1))
+                                  ],
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: user.image != null
+                                        ? NetworkImage(user.image!)
+                                        : const AssetImage(
+                                                'assets/images/user-avatar.png')
+                                            as ImageProvider,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "${user.firstName} ${user.lastName}",
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                user.email,
+                                style: const TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 20,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                              const SizedBox(
+                                height: 50,
+                              ),
                             ],
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: user.image != null
-                                  ? NetworkImage(user.image!)
-                                  : const AssetImage(
-                                          'assets/images/user-avatar.png')
-                                      as ImageProvider,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "${user.firstName} ${user.lastName}",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          user.email,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 20),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                      ],
-                    ),
-                  ),
+                          );
+                        },
+                      )),
                   ProfileItem(
                     icon: Icons.edit,
                     title: 'Edit profile',
@@ -113,7 +142,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       Navigator.push(
                           context,
                           AnimatedPageRoute(
-                              child: ChangePassword(),
+                              child: const ChangePassword(),
                               direction: AxisDirection.left));
                     },
                   ),
@@ -225,16 +254,9 @@ class ProfileItem extends StatelessWidget {
       onTap: onPress,
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.blueGrey[600],
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.white,
-                  blurRadius: 1,
-                  offset: const Offset(1, 2),
-                  blurStyle: BlurStyle.inner,
-                  spreadRadius: 0.5)
-            ]),
+          color: Colors.blueGrey[600],
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: ListTile(
           leading: Container(
             width: 40,
@@ -252,19 +274,6 @@ class ProfileItem extends StatelessWidget {
             title,
             style: const TextStyle(
                 fontSize: 26, fontWeight: FontWeight.w700, color: Colors.white),
-          ),
-          trailing: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Colors.grey.withOpacity(.1),
-            ),
-            child: const Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 18,
-              color: Colors.white,
-            ),
           ),
         ),
       ),
