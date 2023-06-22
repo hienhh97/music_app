@@ -264,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         const SectionHeader(
-                          title: 'Playlist',
+                          title: 'Playlists',
                           action: '',
                         ),
                         FutureBuilder<List<Playlist>>(

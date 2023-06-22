@@ -86,47 +86,6 @@ class _HomeState extends State<Home> {
                         child: const CurrentSong()) // display on
                     : Container(),
 
-                //Bottom Navbar
-                // Container(
-                //   color: Colors.blueGrey.shade900,
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(
-                //         horizontal: 10, vertical: 12),
-                //     child: GNav(
-                //       selectedIndex: _selectedIndex,
-                //       onTabChange: _navigateBottomNavbar,
-                //       color: Colors.white,
-                //       rippleColor: Colors.blueGrey[400]!,
-                //       hoverColor: Colors.blueGrey[100]!,
-                //       tabBackgroundColor: Colors.grey.shade700,
-                //       activeColor: Colors.white,
-                //       gap: 7,
-                //       tabBorderRadius: 20,
-                //       padding: const EdgeInsets.all(16),
-                //       iconSize: 24,
-                //       tabs: [
-                //         GButton(icon: Icons.home, text: 'Home'),
-                //         GButton(
-                //             icon: Icons.my_library_music_outlined,
-                //             text: 'Library'),
-                //         GButton(
-                //           leading: Badge(
-                //             label: Text(notificationProvider
-                //                 .userNotifications.length
-                //                 .toString()),
-                //             child: Icon(
-                //               Icons.notifications,
-                //               color: Colors.white,
-                //             ),
-                //           ),
-                //           icon: Icons.notifications,
-                //           text: 'Notification',
-                //         ),
-                //         GButton(icon: Icons.person, text: 'Personal'),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 StreamBuilder(
                   stream: readUnCheckedNtf,
                   builder: (context, snapshot) {
@@ -157,7 +116,7 @@ class _HomeState extends State<Home> {
                           iconSize: 24,
                           tabs: [
                             GButton(icon: Icons.home, text: 'Home'),
-                            GButton(
+                            const GButton(
                                 icon: Icons.my_library_music_outlined,
                                 text: 'Library'),
                             GButton(
@@ -167,7 +126,7 @@ class _HomeState extends State<Home> {
                                       label: Text(notificationProvider
                                           .userNotifications.length
                                           .toString()),
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.notifications,
                                         color: Colors.white,
                                       ),
@@ -176,7 +135,7 @@ class _HomeState extends State<Home> {
                               icon: Icons.notifications,
                               text: 'Notification',
                             ),
-                            GButton(icon: Icons.person, text: 'Personal'),
+                            const GButton(icon: Icons.person, text: 'Personal'),
                           ],
                         ),
                       ),

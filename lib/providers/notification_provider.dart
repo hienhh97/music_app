@@ -10,6 +10,14 @@ class NotificationProvider with ChangeNotifier {
     _userNotifications = list;
   }
 
+  List<NotificationModel> _userCheckedNotifications = [];
+  List<NotificationModel> get userCheckedNotifications =>
+      _userCheckedNotifications;
+
+  set userCheckedNotifications(List<NotificationModel> list) {
+    _userCheckedNotifications = list;
+  }
+
   Future<void> updateNtf(NotificationModel ntf) async {
     await FirebaseFirestore.instance
         .collection('notifications')
@@ -28,5 +36,21 @@ class NotificationProvider with ChangeNotifier {
       'isChecked': false,
       'timeCreated': Timestamp.now(),
     });
+  }
+
+  Future<void> removeListNtf(List<NotificationModel> list) async {
+    for (var ntf in list) {
+      FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(ntf.id)
+          .delete();
+    }
+  }
+
+  Future<void> removeNtf(NotificationModel ntf) async {
+    await FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(ntf.id)
+        .delete();
   }
 }
