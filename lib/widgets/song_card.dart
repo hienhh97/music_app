@@ -51,8 +51,7 @@ class SongCard extends StatelessWidget {
             ),
             Container(
               height: 50,
-              width: MediaQuery.of(context).size.width * 0.6,
-              margin: const EdgeInsets.only(bottom: 10),
+              width: MediaQuery.of(context).size.width * 0.7,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 color: Colors.white.withOpacity(0.8),
@@ -62,7 +61,7 @@ class SongCard extends StatelessWidget {
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         song.songName,
@@ -71,6 +70,8 @@ class SongCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
                             fontSize: 22),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         song.singer,
@@ -80,10 +81,6 @@ class SongCard extends StatelessWidget {
                             fontStyle: FontStyle.italic),
                       ),
                     ],
-                  ),
-                  const Icon(
-                    Icons.play_circle,
-                    color: Colors.deepPurple,
                   ),
                 ],
               ),

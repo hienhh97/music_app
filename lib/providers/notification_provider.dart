@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:music_app/models/notifcation.dart';
 
 class NotificationProvider with ChangeNotifier {
+  final _firestore = FirebaseFirestore.instance;
   List<NotificationModel> _userNotifications = [];
   List<NotificationModel> get userNotifications => _userNotifications;
 
@@ -18,16 +19,25 @@ class NotificationProvider with ChangeNotifier {
     _userCheckedNotifications = list;
   }
 
-  Future<void> updateNtf(NotificationModel ntf) async {
-    await FirebaseFirestore.instance
+  Future<void> markReadNtf(NotificationModel ntf) async {
+    await _firestore
         .collection('notifications')
         .doc(ntf.id)
         .update({"isChecked": true});
   }
 
+  Future<void> markReadListNtf(List<NotificationModel> list) async {
+    for (var ntf in list) {
+      _firestore
+          .collection('notifications')
+          .doc(ntf.id)
+          .update({"isChecked": true});
+    }
+  }
+
   Future<void> sendNtfToFirestore(
       String title, String userID, String body) async {
-    final docNtf = FirebaseFirestore.instance.collection('notifications').doc();
+    final docNtf = _firestore.collection('notifications').doc();
     await docNtf.set({
       'id': docNtf.id,
       'title': title,
@@ -40,17 +50,11 @@ class NotificationProvider with ChangeNotifier {
 
   Future<void> removeListNtf(List<NotificationModel> list) async {
     for (var ntf in list) {
-      FirebaseFirestore.instance
-          .collection('notifications')
-          .doc(ntf.id)
-          .delete();
+      await _firestore.collection('notifications').doc(ntf.id).delete();
     }
   }
 
   Future<void> removeNtf(NotificationModel ntf) async {
-    await FirebaseFirestore.instance
-        .collection('notifications')
-        .doc(ntf.id)
-        .delete();
+    await _firestore.collection('notifications').doc(ntf.id).delete();
   }
 }

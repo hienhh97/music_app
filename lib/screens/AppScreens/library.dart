@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/providers/store.dart';
-import 'package:music_app/screens/AppScreens/components/my_playlists.dart';
+import 'package:music_app/screens/CommonScreens/my_playlists.dart';
 import 'package:provider/provider.dart';
 import '../../models/account.dart';
 import '../../models/song.dart';
@@ -12,7 +12,7 @@ import '../../providers/song_provider.dart';
 import '../../widgets/widgets.dart';
 import '../CommonScreens/song_screen.dart';
 import '../CommonScreens/upload_new_song.dart';
-import 'components/my_fav_songs.dart';
+import '../CommonScreens/my_fav_songs.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});

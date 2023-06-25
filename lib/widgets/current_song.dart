@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/providers/fav_provider.dart';
+import 'package:music_app/providers/recent_played_provider.dart';
 import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class _CurrentSongState extends State<CurrentSong> {
   Widget build(BuildContext context) {
     SongProvider songProvider = Provider.of<SongProvider>(context);
     FavProvider favProvider = Provider.of<FavProvider>(context);
+    RecentProvider recentProvider = Provider.of<RecentProvider>(context);
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -85,6 +87,7 @@ class _CurrentSongState extends State<CurrentSong> {
             onPressed: () {
               setState(() {
                 songProvider.playNext();
+                recentProvider.setRecent(songProvider.currentSong!);
               });
             },
             icon: const Icon(Icons.skip_next_rounded),

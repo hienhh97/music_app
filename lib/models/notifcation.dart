@@ -17,6 +17,14 @@ class NotificationModel {
     this.timeCreated,
   });
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'userID': userID,
+        'title': title,
+        'isChecked': isChecked,
+        'timeCreated': timeCreated,
+      };
+
   static NotificationModel fromJson(Map<String, dynamic> json) =>
       NotificationModel(
         id: json['id'] as String? ?? '',

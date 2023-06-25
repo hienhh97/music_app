@@ -5,8 +5,11 @@ import 'package:music_app/providers/song_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaylistsFilter extends StatefulWidget {
-  PlaylistsFilter(
-      {super.key, required this.playlists, required this.scaffoldMessengerKey});
+  PlaylistsFilter({
+    super.key,
+    required this.playlists,
+    required this.scaffoldMessengerKey,
+  });
   GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
   @override
