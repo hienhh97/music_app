@@ -39,6 +39,7 @@ class MusicItem extends StatelessWidget {
     SongProvider songProvider = Provider.of<SongProvider>(context);
     RecentProvider recentProvider = Provider.of<RecentProvider>(context);
     return SizeTransition(
+      key: ValueKey(song.imageUrl),
       sizeFactor: animation,
       child: SingleChildScrollView(
         child: Container(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:music_app/providers/fav_provider.dart';
 import 'package:music_app/providers/store.dart';
 import 'package:music_app/screens/CommonScreens/my_playlists.dart';
 import 'package:provider/provider.dart';

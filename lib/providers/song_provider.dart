@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/models/song.dart';
-
 import '../models/playlist.dart';
 
 enum RepeatMode { off, one, all }
@@ -31,7 +29,7 @@ class SongProvider with ChangeNotifier {
   }
 
   Song getByID(String id) => _allSongs.firstWhere((song) => song.id == id);
-  List<Song> getListSong(Playlist playlist) {
+  List<Song> getListSongByID(Playlist playlist) {
     List<Song> songs = [];
     for (var songID in playlist.songIDs) {
       songs.add(getByID(songID));
@@ -59,12 +57,12 @@ class SongProvider with ChangeNotifier {
   }
 
   //Choose a random song from playlist
-  void setPlaylist(List<Song> currentList, {int? index, bool shuffle = false}) {
+  setPlaylist(List<Song> currentList, {int? index, bool shuffle = false}) {
     assert((index != null && !shuffle) || (index == null && shuffle));
     _songList.clear();
     _playedIndexes.clear();
 
-    _songList = currentList;
+    _songList = [...currentList];
     //Play all songs from Shuffle Mode or Normally
     if (shuffle == true) {
       _currentIndex = Random().nextInt(_songList.length);
@@ -76,6 +74,8 @@ class SongProvider with ChangeNotifier {
     shuffleMode = shuffle;
     _playSong(firstSong);
     notifyListeners();
+
+    return firstSong;
   }
 
   void onChangePlayerState() {

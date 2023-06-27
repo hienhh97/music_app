@@ -18,7 +18,6 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   late Stream<List<NotificationModel>> readUnCheckedNtf, readCheckedNtf;
-  bool isEditing = false;
 
   Stream<List<NotificationModel>> getUnCheckedNtf() =>
       FirebaseFirestore.instance
@@ -56,21 +55,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
         backgroundColor: Colors.lightGreen,
         title: const Text('Notifications'),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  isEditing = !isEditing;
-                });
-              },
-              icon: Icon(
-                Icons.edit_outlined,
-                color: !isEditing ? Colors.white : Colors.deepOrange,
-              )),
-          const SizedBox(
-            width: 15,
-          )
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(

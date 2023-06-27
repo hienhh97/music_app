@@ -27,23 +27,23 @@ class FavProvider with ChangeNotifier {
     return userData;
   }
 
-  Future<void> updateList() async {
-    await getUserDetails().whenComplete(() => FirebaseFirestore.instance
+  updateList() {
+    getUserDetails().whenComplete(() => FirebaseFirestore.instance
         .collection("users")
         .doc(userData!.id)
         .update({"favSongs": _favoriteListSongIDs}));
   }
 
-  setFav(Song song) {
+  setFav(Song song) async {
     if (!isFavorite(song)) {
       _favoriteListSongIDs.add(song.id);
       songs.add(song);
+      updateList();
     } else {
       _favoriteListSongIDs.removeWhere((element) => element == song.id);
       songs.removeWhere((element) => element.id == song.id);
+      updateList();
     }
-
-    updateList();
   }
 
   isFavorite(Song song) {

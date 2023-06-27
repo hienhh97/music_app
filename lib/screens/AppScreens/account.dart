@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:music_app/providers/store.dart';
 import 'package:music_app/screens/AuthScreens/change_password.dart';
 import 'package:music_app/screens/CommonScreens/edit_acc_info.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/account.dart';
+import '../../providers/song_provider.dart';
 import '../../widgets/widgets.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -35,6 +38,8 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SongProvider songProvider = Provider.of<SongProvider>(context);
+
     return Scaffold(
       backgroundColor: Colors.blueGrey[900],
       appBar: AppBar(
@@ -180,6 +185,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                   onPressed: () {
                                     FirebaseAuth.instance.signOut();
                                     Navigator.of(context).pop();
+                                    songProvider.state = PlayerState.PAUSED;
                                   },
                                   child: Text(
                                     'Yes',

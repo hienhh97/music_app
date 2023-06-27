@@ -7,6 +7,8 @@ import 'package:music_app/models/song.dart';
 class PlaylistsProvider with ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
 
+  List<Song> songListSelected = [];
+
   Playlist? _currentPlaylist, _selectedPlaylist;
   Playlist? get selectedPlaylist => _selectedPlaylist;
   Playlist? get currentPlaylist => _currentPlaylist;

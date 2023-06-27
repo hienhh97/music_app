@@ -56,6 +56,7 @@ class _HomeState extends State<Home> {
     readUnCheckedNtf = getUnCheckedNtf();
   }
 
+  bool showStopButton = false;
   @override
   Widget build(BuildContext context) {
     SongProvider songProvider = Provider.of<SongProvider>(context);

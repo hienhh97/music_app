@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Stream<List<Song>> readSongs;
-  late Future<List<Playlist>> readPlaylist;
+  late Stream<List<Playlist>> readPlaylist;
 
   Stream<List<Song>> getSongs() => FirebaseFirestore.instance
       .collection('songs')
@@ -29,15 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
       .map((snapshot) =>
           snapshot.docs.map((doc) => Song.fromJson(doc.data())).toList());
 
-  Future<List<Playlist>> getPlaylists() async {
-    var ref = FirebaseFirestore.instance
-        .collection('playlists')
-        .where('createdBy', isEqualTo: 'admin');
-    var snapshot = await ref.get();
-    var data = snapshot.docs.map((i) => i.data());
-    var playlists = data.map((e) => Playlist.fromJson(e));
-    return playlists.toList();
-  }
+  Stream<List<Playlist>> getPlaylists() => FirebaseFirestore.instance
+      .collection('playlists')
+      .where('createdBy', isEqualTo: 'admin')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Playlist.fromJson(doc.data())).toList());
 
   @override
   void initState() {
@@ -75,12 +72,12 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 0,
           shape: const RoundedRectangleBorder(
               borderRadius:
-                  BorderRadius.vertical(bottom: Radius.elliptical(140, 10))),
-          leading: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.workspaces_filled),
-            color: Colors.white,
-          ),
+                  BorderRadius.vertical(bottom: Radius.elliptical(180, 10))),
+          title: SizedBox(
+              height: 50,
+              width: 50,
+              child: Image.asset('assets/login-screen-icon.png')),
+          centerTitle: true,
           actions: [
             //search Icon
             IconButton(
@@ -122,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   Column(
+                    // all songs
                     children: [
                       StreamBuilder<List<Song>>(
                         stream: readSongs,
@@ -172,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                  //recent list
                   recent.isNotEmpty
                       ? Column(
                           children: [
@@ -267,8 +266,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Playlists',
                           action: '',
                         ),
-                        FutureBuilder<List<Playlist>>(
-                          future: readPlaylist,
+                        StreamBuilder<List<Playlist>>(
+                          stream: readPlaylist,
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
                               return Text(snapshot.error.toString());
@@ -284,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 initialItemCount: playlists.length,
                                 itemBuilder: (context, index, animation) {
                                   return PlaylistCard(
+                                    isShowDelButton: false,
                                     playlist: playlists[index],
                                     animation: animation,
                                     onClicked: () {},

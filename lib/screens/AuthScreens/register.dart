@@ -95,179 +95,183 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-    return Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: const Color(0xFF1F1A30),
-        body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: const [0.1, 0.4, 0.7, 0.9],
-                colors: [
-                  const Color.fromARGB(0, 170, 95, 9).withOpacity(0.8),
-                  const Color.fromARGB(0, 26, 119, 156),
-                  const Color.fromARGB(0, 44, 2, 48),
-                  const Color.fromARGB(0, 111, 18, 119),
-                ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: const Color(0xFF1F1A30),
+          body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: const [0.1, 0.4, 0.7, 0.9],
+                  colors: [
+                    const Color.fromARGB(0, 170, 95, 9).withOpacity(0.8),
+                    const Color.fromARGB(0, 26, 119, 156),
+                    const Color.fromARGB(0, 44, 2, 48),
+                    const Color.fromARGB(0, 111, 18, 119),
+                  ],
+                ),
               ),
-            ),
-            child: Form(
-              key: formKey,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 50),
-                      Image.asset(
-                        'assets/login-screen-icon.png',
-                        width: 100,
-                        height: 100,
-                      ),
-                      const SizedBox(height: 20),
-                      Card(
-                        elevation: 5,
-                        color: const Color.fromARGB(255, 171, 211, 250)
-                            .withOpacity(0.4),
-                        child: Container(
-                          width: 400,
-                          padding: const EdgeInsets.all(40.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+              child: Form(
+                key: formKey,
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        Image.asset(
+                          'assets/login-screen-icon.png',
+                          width: 100,
+                          height: 100,
+                        ),
+                        const SizedBox(height: 20),
+                        Card(
+                          elevation: 5,
+                          color: const Color.fromARGB(255, 171, 211, 250)
+                              .withOpacity(0.4),
+                          child: Container(
+                            width: 400,
+                            padding: const EdgeInsets.all(40.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                //Login title
+                                const Text(
+                                  "Register",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 32,
+                                      color: Colors.white),
+                                ),
+
+                                const SizedBox(height: 25),
+
+                                //first name textfiled
+                                TextFormFieldCustom(
+                                    textController: _firstNameController,
+                                    input: 'First name',
+                                    preIcon: Icons.abc),
+
+                                const SizedBox(height: 12),
+                                //last name textfiled
+                                TextFormFieldCustom(
+                                    textController: _lastNameController,
+                                    input: 'Last name',
+                                    preIcon: Icons.abc),
+
+                                const SizedBox(height: 12),
+
+                                //age textfiled
+                                TextFormFieldCustom(
+                                  textController: _ageController,
+                                  input: 'Enter your age',
+                                  preIcon: Icons.numbers_outlined,
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value!.isEmpty ||
+                                        !RegExp(r'^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]+$')
+                                            .hasMatch(value)) {
+                                      return "Enter correct age number!";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                //email textfiled
+                                TextFormFieldCustom(
+                                  textController: _emailController,
+                                  input: 'Email',
+                                  preIcon: Icons.email_outlined,
+                                  validator: (value) {
+                                    if (value!.isEmpty ||
+                                        !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                            .hasMatch(value)) {
+                                      return "Enter correct e-mail address!";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                const SizedBox(height: 12),
+                                //password TextFormField
+                                TextFormFieldObscureTextCustom(
+                                    textController: _passwordController,
+                                    input: 'Password'),
+
+                                const SizedBox(
+                                  height: 12,
+                                ),
+
+                                //confirm password TextFormField
+                                TextFormFieldObscureTextCustom(
+                                    textController: _confirmPasswordController,
+                                    input: 'Confirm password'),
+
+                                const SizedBox(height: 20),
+
+                                //Sign button
+                                GestureDetector(
+                                  onTap: signUp,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: const Center(
+                                        child: Text('Sign up',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold))),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Column(
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25),
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              //Login title
                               const Text(
-                                "Register",
+                                "I'm a member! ",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 32,
-                                    color: Colors.white),
+                                    fontSize: 18, color: Colors.white),
                               ),
-
-                              const SizedBox(height: 25),
-
-                              //first name textfiled
-                              TextFormFieldCustom(
-                                  textController: _firstNameController,
-                                  input: 'First name',
-                                  preIcon: Icons.abc),
-
-                              const SizedBox(height: 12),
-                              //last name textfiled
-                              TextFormFieldCustom(
-                                  textController: _lastNameController,
-                                  input: 'Last name',
-                                  preIcon: Icons.abc),
-
-                              const SizedBox(height: 12),
-
-                              //age textfiled
-                              TextFormFieldCustom(
-                                textController: _ageController,
-                                input: 'Enter your age',
-                                preIcon: Icons.numbers_outlined,
-                                keyboardType: TextInputType.number,
-                                validator: (value) {
-                                  if (value!.isEmpty ||
-                                      !RegExp(r'^[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]+$')
-                                          .hasMatch(value)) {
-                                    return "Enter correct age number!";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-
-                              const SizedBox(height: 12),
-
-                              //email textfiled
-                              TextFormFieldCustom(
-                                textController: _emailController,
-                                input: 'Email',
-                                preIcon: Icons.email_outlined,
-                                validator: (value) {
-                                  if (value!.isEmpty ||
-                                      !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                          .hasMatch(value)) {
-                                    return "Enter correct e-mail address!";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              const SizedBox(height: 12),
-                              //password TextFormField
-                              TextFormFieldObscureTextCustom(
-                                  textController: _passwordController,
-                                  input: 'Password'),
-
-                              const SizedBox(
-                                height: 12,
-                              ),
-
-                              //confirm password TextFormField
-                              TextFormFieldObscureTextCustom(
-                                  textController: _confirmPasswordController,
-                                  input: 'Confirm password'),
-
-                              const SizedBox(height: 20),
-
-                              //Sign button
                               GestureDetector(
-                                onTap: signUp,
-                                child: Container(
-                                  padding: const EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
+                                onTap: widget.showLoginScreen,
+                                child: const Text(
+                                  "Go to Login!",
+                                  style: TextStyle(
                                       color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: const Center(
-                                      child: Text('Sign up',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold))),
+                                      fontSize: 18,
+                                      fontStyle: FontStyle.italic),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "I'm a member! ",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
-                            GestureDetector(
-                              onTap: widget.showLoginScreen,
-                              child: const Text(
-                                "Go to Login!",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 18,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 45,
-                      )
-                    ],
+                        const SizedBox(
+                          height: 45,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            )));
+              ))),
+    );
   }
 }

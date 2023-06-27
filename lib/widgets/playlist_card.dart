@@ -12,25 +12,19 @@ class PlaylistCard extends StatefulWidget {
     required this.playlist,
     required this.animation,
     required this.onClicked,
+    required this.isShowDelButton,
   });
 
   final Playlist playlist;
   final Animation<double> animation;
   final VoidCallback? onClicked;
+  final bool isShowDelButton;
 
   @override
   State<PlaylistCard> createState() => _PlaylistCardState();
 }
 
 class _PlaylistCardState extends State<PlaylistCard> {
-  late bool showDeleteButton;
-
-  @override
-  void initState() {
-    super.initState();
-    showDeleteButton = false;
-  }
-
   @override
   Widget build(BuildContext context) {
     PlaylistsProvider playlistsProvider =
@@ -43,13 +37,8 @@ class _PlaylistCardState extends State<PlaylistCard> {
           Navigator.push(
               context,
               AnimatedPageRoute(
-                  child: const PlaylistScreen(),
+                  child: PlaylistScreen(playlistID: widget.playlist.id),
                   direction: AxisDirection.left));
-        },
-        onHorizontalDragEnd: (details) {
-          setState(() {
-            showDeleteButton = !showDeleteButton;
-          });
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 10),
@@ -103,23 +92,21 @@ class _PlaylistCardState extends State<PlaylistCard> {
                 ],
               ),
             ),
-            widget.playlist.createdBy != 'admin'
-                ? AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: showDeleteButton ? 75 : 0,
-                    height: 75,
-                    decoration: const BoxDecoration(
-                        color: Colors.red,
-                        borderRadius:
-                            BorderRadius.horizontal(left: Radius.circular(15))),
-                    child: IconButton(
-                      onPressed: widget.onClicked,
-                      icon: const Icon(Icons.clear),
-                      color: Colors.white,
-                      iconSize: 30,
-                    ),
-                  )
-                : Container()
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: widget.isShowDelButton ? 75 : 0,
+              height: 75,
+              decoration: const BoxDecoration(
+                  color: Colors.red,
+                  borderRadius:
+                      BorderRadius.horizontal(left: Radius.circular(5))),
+              child: IconButton(
+                onPressed: widget.onClicked,
+                icon: const Icon(Icons.clear),
+                color: Colors.white,
+                iconSize: 30,
+              ),
+            )
           ]),
         ),
       ),

@@ -108,6 +108,7 @@ class _SearchSongScreenState extends State<SearchSongScreen> {
           ? () {
               songProvider.setSong(song);
               Get.toNamed('/song', arguments: song);
+              playlistsProvider.currentPlaylist = null;
             }
           : () {
               playlistsProvider
