@@ -18,12 +18,14 @@ THIS IS A PART OF ALL SOURCES CODE
 - Logout
 - Change password
 - Play single song, multi songs (Playlist)
-- Player buttons: Play-Pause; Next, Prev song; Shuffle mode; Repeat mode (one, all, off); seek.
-- Animation (route)
-- Search (by song name)
-- Library (inprogress...)
-- Notification screen (inprogress...)
+- Player buttons: Play-Pause; Next, Prev song; Shuffle mode; Repeat mode (one, all, off); handle seekbar.
+- Animation: page route, CRUD items
+- Search(filter): by song name
+- Library
+- Notification screen
 
 ## Screenshots:
 
-<img src="assets\images\screenshots\345885144_202284029305214_5736971227586825664_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\345637496_623974852948698_1053404623300416203_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\348354503_1463024297775737_5198171905415487694_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\345562690_571102388464909_3165295571968431330_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\345641593_817795459203350_3838588068913184153_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\345788289_1203991670320561_7341749186030904274_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\345840847_923831395579610_642034763657039211_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\348354497_3117304458575644_8732095082630579382_n.jpg"  width="230" height="480">
+<img src="assets\images\screenshots\353718233_1295510661367275_6630698483274128215_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353723432_950952832804249_6709974185082437448_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353718578_1289467072008364_9111737534615909556_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353698751_123980944058992_2044165274489825045_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353708535_1039258997038940_8116784620374451754_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353704340_284619737302843_6029115634727294354_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353725789_1512581512818182_5634739007800895872_n.jpg"  width="230" height="480"> <img src="assets\images\screenshots\353748103_274675805058284_1649281519277556373_n.jpg"  width="230" height="480"><img src="assets\images\screenshots\353769957_289692806813584_1011998957837891402_n.jpg"  width="230" height="480"><img src="assets\images\screenshots\353748763_657070316462937_6168164692675760303_n.jpg"  width="230" height="480"><img src="assets\images\screenshots\353728136_838983357784622_5369973436299424676_n.jpg"  width="230" height="480"><img src="assets\images\screenshots\353720826_110808962044907_267103124060000323_n.jpg"  width="230" height="480">
+
+### Demo: https://www.youtube.com/watch?v=gXVuy9rihpM
